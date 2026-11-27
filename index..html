@@ -1,0 +1,2544 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>全生命週期營養照護與國際實證評估平台 | Life-course Nutrition Evidence-Based Platform</title>
+  <style>
+    /* ==========================================================================
+       1. DESIGN TOKENS & WARM MEDICAL PALETTE (Zero External CDN Dependencies)
+       ========================================================================== */
+    :root {
+      --bg-main: #FDFBF7;
+      --bg-card-sub: #F7F4EF;
+      --bg-white: #FFFFFF;
+      --border-warm: #E6DDD3;
+      --border-strong: #D5C8BA;
+
+      --primary-amber: #D97706;
+      --primary-amber-hover: #B45309;
+      --primary-amber-soft: #FEF3C7;
+
+      --accent-coral: #E06D53;
+      --accent-coral-soft: #FDECE8;
+
+      --text-main: #2D2522;
+      --text-sub: #6B5B53;
+
+      /* Semantic Risk Colors (Harmonized with Warm Palette) */
+      --risk-low: #3F7D58;
+      --risk-low-bg: #ECF5F0;
+      --risk-low-border: #B8DAC5;
+
+      --risk-mid: #C87D20;
+      --risk-mid-bg: #FDF4E6;
+      --risk-mid-border: #F2D2A2;
+
+      --risk-high: #C84B31;
+      --risk-high-bg: #FDECE8;
+      --risk-high-border: #F3B7AA;
+
+      --radius-sm: 8px;
+      --radius-md: 12px;
+      --radius-lg: 16px;
+      --radius-pill: 9999px;
+
+      --shadow-sm: 0 2px 8px rgba(45, 37, 34, 0.05);
+      --shadow-md: 0 6px 20px rgba(45, 37, 34, 0.07);
+      --transition: 0.2s ease;
+    }
+
+    *, *::before, *::after {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    html {
+      scroll-behavior: smooth;
+    }
+
+    body {
+      background-color: var(--bg-main);
+      color: var(--text-main);
+      font-family: "PingFang TC", "Microsoft JhengHei", "Noto Sans TC", "Heiti TC", system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+      line-height: 1.6;
+      font-size: 15px;
+      -webkit-font-smoothing: antialiased;
+    }
+
+    /* ==========================================================================
+       2. LAYOUT & HEADER
+       ========================================================================== */
+    .container {
+      max-width: 1240px;
+      margin: 0 auto;
+      padding: 0 16px;
+    }
+
+    .site-header {
+      background: rgba(255, 255, 255, 0.94);
+      backdrop-filter: blur(8px);
+      border-bottom: 1px solid var(--border-warm);
+      position: sticky;
+      top: 0;
+      z-index: 50;
+      padding: 14px 0;
+    }
+
+    .header-inner {
+      display: flex;
+      flex-wrap: wrap;
+      align-items: center;
+      justify-content: space-between;
+      gap: 14px;
+    }
+
+    .brand {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+
+    .brand-icon {
+      width: 44px;
+      height: 44px;
+      border-radius: 14px;
+      background: linear-gradient(135deg, var(--primary-amber), var(--accent-coral));
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: #FFFFFF;
+      flex-shrink: 0;
+      box-shadow: var(--shadow-sm);
+    }
+
+    .brand-title {
+      font-size: 1.2rem;
+      font-weight: 700;
+      color: var(--text-main);
+      letter-spacing: -0.01em;
+    }
+
+    .brand-sub {
+      font-size: 0.78rem;
+      color: var(--text-sub);
+      margin-top: 2px;
+    }
+
+    .header-actions {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+    }
+
+    /* ==========================================================================
+       3. BUTTONS & EVIDENCE BADGES
+       ========================================================================== */
+    .btn {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 6px;
+      padding: 8px 14px;
+      border-radius: var(--radius-md);
+      font-size: 0.85rem;
+      font-weight: 600;
+      border: 1px solid transparent;
+      cursor: pointer;
+      transition: all var(--transition);
+      font-family: inherit;
+      text-decoration: none;
+    }
+
+    .btn-primary {
+      background: var(--primary-amber);
+      color: #FFFFFF;
+    }
+    .btn-primary:hover { background: var(--primary-amber-hover); }
+
+    .btn-amber-soft {
+      background: #FEF3C7;
+      color: #92400E;
+      border-color: #FDE68A;
+    }
+    .btn-amber-soft:hover { background: #FDE68A; }
+
+    .btn-outline {
+      background: var(--bg-card-sub);
+      color: var(--text-main);
+      border-color: var(--border-warm);
+    }
+    .btn-outline:hover { background: var(--border-warm); }
+
+    .btn-dark {
+      background: var(--text-main);
+      color: #FFFFFF;
+    }
+    .btn-dark:hover { opacity: 0.9; }
+
+    .btn-sm {
+      padding: 5px 10px;
+      font-size: 0.78rem;
+      border-radius: var(--radius-sm);
+    }
+
+    /* Clickable Evidence Badges */
+    .ev-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 4px;
+      padding: 2px 9px;
+      border-radius: var(--radius-pill);
+      font-size: 0.72rem;
+      font-weight: 700;
+      background: var(--bg-card-sub);
+      color: var(--text-sub);
+      border: 1px solid var(--border-strong);
+      cursor: pointer;
+      transition: all var(--transition);
+      vertical-align: middle;
+      white-space: nowrap;
+      font-family: inherit;
+    }
+    .ev-badge:hover {
+      background: var(--primary-amber);
+      color: #FFFFFF;
+      border-color: var(--primary-amber);
+      transform: translateY(-1px);
+    }
+    .ev-badge.strong {
+      background: var(--risk-low-bg);
+      color: var(--risk-low);
+      border-color: var(--risk-low-border);
+    }
+    .ev-badge.strong:hover { background: var(--risk-low); color: #FFFFFF; }
+
+    .ev-badge.conditional {
+      background: var(--risk-mid-bg);
+      color: var(--risk-mid);
+      border-color: var(--risk-mid-border);
+    }
+    .ev-badge.conditional:hover { background: var(--risk-mid); color: #FFFFFF; }
+
+    .ev-badge.alert {
+      background: var(--risk-high-bg);
+      color: var(--risk-high);
+      border-color: var(--risk-high-border);
+    }
+    .ev-badge.alert:hover { background: var(--risk-high); color: #FFFFFF; }
+
+    /* Status Pill */
+    .status-pill {
+      display: inline-flex;
+      align-items: center;
+      padding: 4px 12px;
+      border-radius: var(--radius-pill);
+      font-size: 0.78rem;
+      font-weight: 700;
+    }
+    .pill-low { background: var(--risk-low-bg); color: var(--risk-low); border: 1px solid var(--risk-low-border); }
+    .pill-mid { background: var(--risk-mid-bg); color: var(--risk-mid); border: 1px solid var(--risk-mid-border); }
+    .pill-high { background: var(--risk-high-bg); color: var(--risk-high); border: 1px solid var(--risk-high-border); }
+    .pill-neutral { background: var(--bg-card-sub); color: var(--text-sub); border: 1px solid var(--border-warm); }
+
+    /* ==========================================================================
+       4. MAIN SECTIONS, TABS & CARDS
+       ========================================================================== */
+    main {
+      padding: 24px 0 48px;
+    }
+
+    .section-gap {
+      margin-top: 28px;
+    }
+
+    /* 4 Stage Selector Grid */
+    .stage-grid {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 14px;
+    }
+
+    .stage-card {
+      background: var(--bg-white);
+      border: 2px solid var(--border-warm);
+      border-radius: var(--radius-lg);
+      padding: 16px;
+      text-align: left;
+      cursor: pointer;
+      transition: all var(--transition);
+      box-shadow: var(--shadow-sm);
+      font-family: inherit;
+    }
+    .stage-card:hover {
+      border-color: var(--border-strong);
+      box-shadow: var(--shadow-md);
+      transform: translateY(-2px);
+    }
+    .stage-card.active {
+      border-color: var(--primary-amber);
+      background: #FFFDF8;
+      box-shadow: 0 6px 20px rgba(217, 119, 6, 0.12);
+    }
+    .stage-card-top {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 8px;
+      font-size: 0.75rem;
+    }
+    .stage-num {
+      font-weight: 700;
+      padding: 2px 8px;
+      border-radius: var(--radius-pill);
+      background: var(--bg-card-sub);
+      color: var(--primary-amber);
+    }
+    .stage-card.active .stage-num {
+      background: var(--primary-amber);
+      color: #FFFFFF;
+    }
+    .stage-setting { color: var(--text-sub); }
+    .stage-title { font-size: 1rem; font-weight: 700; color: var(--text-main); }
+    .stage-desc { font-size: 0.78rem; color: var(--text-sub); margin-top: 4px; line-height: 1.45; }
+
+    /* Stage Banner */
+    .stage-banner {
+      background: var(--bg-card-sub);
+      border: 1px solid var(--border-warm);
+      border-radius: var(--radius-lg);
+      padding: 18px 20px;
+      display: flex;
+      flex-wrap: wrap;
+      align-items: center;
+      justify-content: space-between;
+      gap: 14px;
+      margin-bottom: 20px;
+    }
+    .banner-kicker {
+      font-size: 0.78rem;
+      font-weight: 700;
+      color: var(--accent-coral);
+      letter-spacing: 0.02em;
+    }
+    .banner-title {
+      font-size: 1.25rem;
+      font-weight: 700;
+      color: var(--text-main);
+      margin-top: 2px;
+    }
+
+    /* Sub-mode Switcher */
+    .sub-switcher {
+      display: inline-flex;
+      background: var(--bg-white);
+      border: 1px solid var(--border-warm);
+      border-radius: var(--radius-md);
+      padding: 4px;
+      gap: 4px;
+    }
+    .sub-btn {
+      padding: 7px 14px;
+      border: none;
+      border-radius: var(--radius-sm);
+      font-size: 0.84rem;
+      font-weight: 600;
+      background: transparent;
+      color: var(--text-sub);
+      cursor: pointer;
+      transition: all var(--transition);
+      font-family: inherit;
+    }
+    .sub-btn.active {
+      background: var(--accent-coral);
+      color: #FFFFFF;
+      box-shadow: var(--shadow-sm);
+    }
+
+    /* Two-Column Content Grid */
+    .content-grid {
+      display: grid;
+      grid-template-columns: 5fr 7fr;
+      gap: 20px;
+      align-items: start;
+    }
+    .content-grid-equal {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 20px;
+      align-items: start;
+    }
+
+    /* Standard White Card */
+    .card {
+      background: var(--bg-white);
+      border: 1px solid var(--border-warm);
+      border-radius: var(--radius-lg);
+      padding: 22px;
+      box-shadow: var(--shadow-sm);
+    }
+    .card + .card {
+      margin-top: 18px;
+    }
+    .card-header {
+      display: flex;
+      flex-wrap: wrap;
+      align-items: center;
+      justify-content: space-between;
+      gap: 8px;
+      padding-bottom: 12px;
+      margin-bottom: 16px;
+      border-bottom: 1px solid var(--border-warm);
+    }
+    .card-title {
+      font-size: 1.05rem;
+      font-weight: 700;
+      color: var(--text-main);
+      display: flex;
+      flex-wrap: wrap;
+      align-items: center;
+      gap: 8px;
+    }
+
+    /* ==========================================================================
+       5. FORMS, INPUTS & VALIDATION
+       ========================================================================== */
+    .form-grid-2 {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 12px;
+    }
+    .form-grid-3 {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 10px;
+    }
+    .form-group {
+      margin-bottom: 14px;
+    }
+    .form-label {
+      display: block;
+      font-size: 0.82rem;
+      font-weight: 600;
+      color: var(--text-main);
+      margin-bottom: 5px;
+    }
+    .form-input, .form-select {
+      width: 100%;
+      padding: 9px 12px;
+      border: 1px solid var(--border-strong);
+      border-radius: var(--radius-sm);
+      background: var(--bg-main);
+      color: var(--text-main);
+      font-size: 0.9rem;
+      font-family: inherit;
+      transition: border-color var(--transition), box-shadow var(--transition);
+    }
+    .form-input:focus, .form-select:focus {
+      outline: none;
+      border-color: var(--primary-amber);
+      box-shadow: 0 0 0 3px rgba(217, 119, 6, 0.15);
+      background: #FFFFFF;
+    }
+    .form-input.invalid {
+      border-color: var(--risk-high);
+      background: var(--risk-high-bg);
+    }
+    .err-msg {
+      color: var(--risk-high);
+      font-size: 0.74rem;
+      font-weight: 600;
+      margin-top: 4px;
+      display: none;
+    }
+    .err-msg.show { display: block; }
+
+    .check-card {
+      display: flex;
+      align-items: flex-start;
+      gap: 10px;
+      padding: 11px 13px;
+      border: 1px solid var(--border-warm);
+      border-radius: var(--radius-md);
+      background: var(--bg-main);
+      cursor: pointer;
+      transition: background var(--transition);
+      margin-bottom: 10px;
+    }
+    .check-card:hover { background: var(--bg-card-sub); }
+    .check-card input[type="checkbox"] {
+      margin-top: 3px;
+      width: 16px;
+      height: 16px;
+      accent-color: var(--primary-amber);
+      flex-shrink: 0;
+    }
+    .check-card.danger-box {
+      border-color: var(--risk-high-border);
+      background: var(--risk-high-bg);
+    }
+    .check-title { font-size: 0.86rem; font-weight: 700; color: var(--text-main); display: block; }
+    .check-desc { font-size: 0.76rem; color: var(--text-sub); display: block; margin-top: 2px; }
+
+    /* ==========================================================================
+       6. METRIC BOXES, ALERTS & TABLES
+       ========================================================================== */
+    .metric-box {
+      background: var(--bg-card-sub);
+      border: 1px solid var(--border-warm);
+      border-radius: var(--radius-md);
+      padding: 14px 16px;
+    }
+    .metric-label { font-size: 0.76rem; color: var(--text-sub); font-weight: 600; }
+    .metric-value { font-size: 1.45rem; font-weight: 700; color: var(--text-main); margin-top: 2px; }
+    .metric-note { font-size: 0.74rem; color: var(--text-sub); margin-top: 4px; }
+
+    .alert-box {
+      border-radius: var(--radius-md);
+      padding: 15px 16px;
+      border-left: 4px solid var(--primary-amber);
+      background: var(--risk-mid-bg);
+      margin-bottom: 16px;
+      font-size: 0.86rem;
+    }
+    .alert-box.high {
+      border-left-color: var(--risk-high);
+      background: var(--risk-high-bg);
+    }
+    .alert-box.low {
+      border-left-color: var(--risk-low);
+      background: var(--risk-low-bg);
+    }
+    .alert-title {
+      font-weight: 700;
+      font-size: 0.94rem;
+      margin-bottom: 6px;
+      display: flex;
+      flex-wrap: wrap;
+      align-items: center;
+      gap: 6px;
+    }
+    .alert-box.high .alert-title { color: var(--risk-high); }
+    .alert-box.low .alert-title { color: var(--risk-low); }
+    .alert-box ul { padding-left: 18px; margin-top: 6px; }
+    .alert-box li { margin-bottom: 4px; }
+
+    /* Responsive Table */
+    .table-wrap {
+      overflow-x: auto;
+      -webkit-overflow-scrolling: touch;
+    }
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      font-size: 0.85rem;
+    }
+    th {
+      text-align: left;
+      padding: 10px 10px;
+      background: var(--bg-card-sub);
+      color: var(--text-sub);
+      font-weight: 700;
+      font-size: 0.78rem;
+      border-bottom: 1px solid var(--border-warm);
+      white-space: nowrap;
+    }
+    td {
+      padding: 10px 10px;
+      border-bottom: 1px solid var(--border-warm);
+      vertical-align: top;
+    }
+    tr.highlight-row {
+      background-color: #FEF3C7 !important;
+      transition: background-color 0.4s ease;
+    }
+
+    /* Progress Bar */
+    .progress-track {
+      width: 100%;
+      height: 10px;
+      background: var(--bg-card-sub);
+      border-radius: var(--radius-pill);
+      overflow: hidden;
+      border: 1px solid var(--border-warm);
+      margin-top: 8px;
+    }
+    .progress-fill {
+      height: 100%;
+      background: var(--risk-low);
+      border-radius: var(--radius-pill);
+      transition: width 0.3s ease;
+    }
+
+    /* ICOPE Interactive Steps */
+    .icope-steps {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 10px;
+      margin-top: 12px;
+    }
+    .icope-step-btn {
+      text-align: left;
+      padding: 12px;
+      border-radius: var(--radius-md);
+      border: 2px solid var(--border-warm);
+      background: var(--bg-main);
+      cursor: pointer;
+      transition: all var(--transition);
+      font-family: inherit;
+    }
+    .icope-step-btn.active {
+      border-color: var(--primary-amber);
+      background: var(--risk-mid-bg);
+    }
+
+    /* Filter Chips for Reference Table */
+    .chip-group {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      margin-bottom: 14px;
+    }
+    .chip {
+      padding: 6px 13px;
+      border-radius: var(--radius-pill);
+      border: 1px solid var(--border-strong);
+      background: var(--bg-main);
+      color: var(--text-sub);
+      font-size: 0.8rem;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all var(--transition);
+      font-family: inherit;
+    }
+    .chip.active {
+      background: var(--primary-amber);
+      color: #FFFFFF;
+      border-color: var(--primary-amber);
+    }
+
+    /* SVG Chart Box */
+    .svg-chart-wrap {
+      background: var(--bg-main);
+      border: 1px solid var(--border-warm);
+      border-radius: var(--radius-md);
+      padding: 14px;
+      margin-bottom: 16px;
+    }
+
+    /* Toast Notification */
+    #toast-container {
+      position: fixed;
+      bottom: 20px;
+      right: 20px;
+      z-index: 999;
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+    }
+    .toast {
+      background: var(--text-main);
+      color: #FFFFFF;
+      padding: 10px 16px;
+      border-radius: var(--radius-md);
+      font-size: 0.85rem;
+      font-weight: 600;
+      box-shadow: var(--shadow-md);
+      opacity: 0;
+      transform: translateY(8px);
+      transition: all 0.25s ease;
+    }
+    .toast.show { opacity: 1; transform: translateY(0); }
+    .toast.success { background: var(--risk-low); }
+    .toast.warn { background: var(--risk-high); }
+
+    .hidden { display: none !important; }
+    .text-sub { color: var(--text-sub); }
+    .text-sm { font-size: 0.84rem; }
+    .text-xs { font-size: 0.76rem; }
+    .mt-2 { margin-top: 8px; }
+    .mt-3 { margin-top: 12px; }
+    .mt-4 { margin-top: 16px; }
+    .mb-2 { margin-bottom: 8px; }
+    .mb-3 { margin-bottom: 12px; }
+
+    /* Footer */
+    footer {
+      background: var(--bg-card-sub);
+      border-top: 1px solid var(--border-warm);
+      padding: 20px 0;
+      text-align: center;
+      font-size: 0.78rem;
+      color: var(--text-sub);
+    }
+
+    /* ==========================================================================
+       7. RESPONSIVE BREAKPOINTS & PRINT STYLES
+       ========================================================================== */
+    @media (max-width: 1024px) {
+      .stage-grid { grid-template-columns: repeat(2, 1fr); }
+      .content-grid, .content-grid-equal { grid-template-columns: 1fr; }
+      .icope-steps { grid-template-columns: repeat(2, 1fr); }
+    }
+    @media (max-width: 640px) {
+      .stage-grid { grid-template-columns: 1fr; }
+      .form-grid-2, .form-grid-3 { grid-template-columns: 1fr; }
+      .icope-steps { grid-template-columns: 1fr; }
+      .brand-title { font-size: 1.05rem; }
+    }
+    @media print {
+      body { background: #FFFFFF; color: #000000; font-size: 12px; }
+      .no-print, .site-header .header-actions, .stage-grid, #toast-container { display: none !important; }
+      .site-header { position: static; border-bottom: 2px solid #000; }
+      .card, .alert-box, .metric-box { box-shadow: none !important; break-inside: avoid; border-color: #CCC !important; }
+      .content-grid { grid-template-columns: 1fr; }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- Toast Notification Container -->
+  <div id="toast-container" class="no-print"></div>
+
+  <!-- Top Header & Global Toolbar -->
+  <header class="site-header">
+    <div class="container header-inner">
+      <div class="brand">
+        <div class="brand-icon" aria-hidden="true">
+          <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M12 21s-7-4.35-9.33-8.28C.6 9.25 2.42 4.5 6.8 4.5c2.1 0 3.74 1.05 5.2 2.7 1.46-1.65 3.1-2.7 5.2-2.7 4.38 0 6.2 4.75 4.13 8.22C19 16.65 12 21 12 21z"/>
+          </svg>
+        </div>
+        <div>
+          <h1 class="brand-title">全生命週期營養照護與國際實證評估平台</h1>
+          <p class="brand-sub">Life-course Nutrition Evidence-Based Platform｜國際衛生機構規範 × 專科醫學會指引 × 持續追蹤</p>
+        </div>
+      </div>
+
+      <div class="header-actions no-print">
+        <button type="button" class="btn btn-amber-soft" onclick="loadSampleData()">帶入當前階段臨床範例</button>
+        <button type="button" class="btn btn-outline" onclick="resetCurrentStage()">清除重置</button>
+        <button type="button" class="btn btn-outline" onclick="jumpToGuidelines()">國際指引速查表</button>
+        <button type="button" class="btn btn-dark" onclick="window.print()">列印 / 匯出評估單</button>
+      </div>
+    </div>
+  </header>
+
+  <main class="container">
+    <!-- 4 Life-Course Stage Selector -->
+    <section class="stage-grid no-print" aria-label="四大生命週期切換">
+      <button type="button" id="tab-maternal" class="stage-card active" onclick="switchStage('maternal')">
+        <div class="stage-card-top">
+          <span class="stage-num">階段一</span>
+          <span class="stage-setting">產檢 / 個人化數位衛教</span>
+        </div>
+        <div class="stage-title">孕產婦及嬰幼兒期</div>
+        <div class="stage-desc">孕期關鍵營養素、補充劑疊加檢核、維生素 D 與嬰幼兒副食品/過敏原指引</div>
+      </button>
+
+      <button type="button" id="tab-pediatric" class="stage-card" onclick="switchStage('pediatric')">
+        <div class="stage-card-top">
+          <span class="stage-num">階段二</span>
+          <span class="stage-setting">校園環境 / 家庭與社區</span>
+        </div>
+        <div class="stage-title">兒童及青少年期</div>
+        <div class="stage-desc">WHO 2026 校園飲食環境改革、Co-design 共同設計與 AAP 2023 肥胖治療</div>
+      </button>
+
+      <button type="button" id="tab-adult" class="stage-card" onclick="switchStage('adult')">
+        <div class="stage-card-top">
+          <span class="stage-num">階段三</span>
+          <span class="stage-setting">職場促進 / 慢性病門診</span>
+        </div>
+        <div class="stage-title">成人期</div>
+        <div class="stage-desc">ADA 2026 代謝管理、PREDIMED 地中海飲食、AWGS 肌少症與 50–74 歲存骨本</div>
+      </button>
+
+      <button type="button" id="tab-elderly" class="stage-card" onclick="switchStage('elderly')">
+        <div class="stage-card-top">
+          <span class="stage-num">階段四</span>
+          <span class="stage-setting">社區整合 / 臨床共病管理</span>
+        </div>
+        <div class="stage-title">高齡期</div>
+        <div class="stage-desc">MNA-SF、GLIM 2025、腎病共病衝突警示、ONS 處方與 WHO ICOPE 2025</div>
+      </button>
+    </section>
+
+    <!-- ======================================================================
+         TAB 1: 孕產婦及嬰幼兒期 (Maternal & Infant)
+         ====================================================================== -->
+    <section id="panel-maternal" class="stage-panel section-gap">
+      <div class="stage-banner">
+        <div>
+          <div class="banner-kicker">生活場域：醫療產檢門診、兒科追蹤、個人化數位衛教</div>
+          <h2 class="banner-title">孕產婦及嬰幼兒期：保護胎兒發育與預防早期營養缺乏</h2>
+        </div>
+        <div class="sub-switcher no-print">
+          <button type="button" id="sub-preg-btn" class="sub-btn active" onclick="setMaternalSub('pregnant')">孕產婦評估</button>
+          <button type="button" id="sub-inf-btn" class="sub-btn" onclick="setMaternalSub('infant')">嬰幼兒評估 (0–24 個月)</button>
+        </div>
+      </div>
+
+      <!-- Sub-view A: Pregnant -->
+      <div id="view-pregnant" class="content-grid">
+        <div class="card">
+          <div class="card-header">
+            <h3 class="card-title">孕產婦生理參數與補充劑盤點</h3>
+          </div>
+
+          <div class="form-grid-2">
+            <div class="form-group">
+              <label class="form-label" for="p-stage">孕期階段</label>
+              <select id="p-stage" class="form-select" onchange="calcPregnant()">
+                <option value="pre">備孕期</option>
+                <option value="t1" selected>第一孕期 (0–12 週)</option>
+                <option value="t2">第二孕期 (13–27 週)</option>
+                <option value="t3">第三孕期 (28–40 週)</option>
+              </select>
+            </div>
+            <div class="form-group">
+              <label class="form-label" for="p-bmi">孕前 BMI (kg/m²)</label>
+              <input type="number" id="p-bmi" class="form-input" min="12" max="60" step="0.1" placeholder="例如 21.5" oninput="calcPregnant()" />
+              <div id="err-p-bmi" class="err-msg">請輸入有效孕前 BMI (12–60)</div>
+            </div>
+          </div>
+
+          <div id="p-bmi-summary" class="metric-box mb-3">
+            <div class="metric-label">孕前 BMI 狀態與建議增重參考</div>
+            <div id="p-bmi-text" class="text-sm mt-2 text-sub">請輸入孕前 BMI 以顯示個別化建議。</div>
+          </div>
+
+          <label class="check-card">
+            <input type="checkbox" id="p-low-ca" onchange="calcPregnant()" />
+            <span>
+              <span class="check-title">屬低鈣飲食族群</span>
+              <span class="check-desc">日常乳品與高鈣食物攝取不足（觸發 WHO 降低子癲前症補鈣建議）</span>
+            </span>
+          </label>
+
+          <label class="check-card">
+            <input type="checkbox" id="p-anemia" onchange="calcPregnant()" />
+            <span>
+              <span class="check-title">有孕期貧血或缺鐵病史</span>
+              <span class="check-desc">須追蹤血紅素/鐵蛋白並確認元素鐵補充劑量</span>
+            </span>
+          </label>
+
+          <div class="mt-4" style="border-top: 1px solid var(--border-warm); padding-top: 14px;">
+            <div class="form-label mb-2">目前額外服用營養補充劑盤點（重複疊加檢核）</div>
+            <div class="form-grid-2">
+              <div class="form-group">
+                <label class="form-label text-xs" for="p-sup-folate">額外葉酸 (μg/日)</label>
+                <input type="number" id="p-sup-folate" class="form-input" min="0" max="10000" placeholder="例如 400" oninput="calcPregnant()" />
+              </div>
+              <div class="form-group">
+                <label class="form-label text-xs" for="p-sup-iron">額外元素鐵 (mg/日)</label>
+                <input type="number" id="p-sup-iron" class="form-input" min="0" max="300" placeholder="例如 30" oninput="calcPregnant()" />
+              </div>
+              <div class="form-group">
+                <label class="form-label text-xs" for="p-sup-vitd">額外維生素 D (IU/日)</label>
+                <input type="number" id="p-sup-vitd" class="form-input" min="0" max="20000" placeholder="例如 800" oninput="calcPregnant()" />
+              </div>
+              <div class="form-group">
+                <label class="form-label text-xs" for="p-sup-ca">額外元素鈣 (mg/日)</label>
+                <input type="number" id="p-sup-ca" class="form-input" min="0" max="5000" placeholder="例如 1500" oninput="calcPregnant()" />
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div>
+          <!-- Supplement Overlap Audit Result -->
+          <div id="p-overlap-box" class="card">
+            <div class="card-header">
+              <h3 class="card-title">補充劑重複疊加與達標即時檢核</h3>
+              <span id="p-overlap-pill" class="status-pill pill-neutral">待輸入補充劑量</span>
+            </div>
+            <div id="p-overlap-list" class="text-sm text-sub">請於左側輸入目前額外服用的葉酸、鐵、維生素 D 或鈣劑量，系統將即時比對國際上限與建議範圍，預防重複補充與過量風險。</div>
+          </div>
+
+          <!-- Nutrient Targets Table -->
+          <div class="card">
+            <div class="card-header">
+              <h3 class="card-title">孕期關鍵營養素目標（明確區分「額外補充量」vs「飲食總攝取量」）</h3>
+            </div>
+            <p class="text-xs text-sub mb-3">臨床提醒：各項數字分別為「額外補充量」或「飲食總攝取量」，<strong>不可全部當作額外補充的處方劑量</strong>。</p>
+            <div class="table-wrap">
+              <table>
+                <thead>
+                  <tr>
+                    <th>營養素</th>
+                    <th>標示類型</th>
+                    <th>建議目標值</th>
+                    <th>臨床目的與國際出處</th>
+                  </tr>
+                </thead>
+                <tbody id="p-nutrient-tbody"></tbody>
+              </table>
+            </div>
+          </div>
+
+          <!-- Endocrine Society 2024 Vitamin D Alert -->
+          <div class="alert-box">
+            <div class="alert-title">
+              維生素 D 臨床實證警訊卡
+              <button type="button" class="ev-badge conditional" onclick="jumpToGuideline('ref-endo2024')">Endocrine Society 2024 • 條件式建議</button>
+            </div>
+            <ul>
+              <li><strong>經驗性補充策略：</strong>建議孕婦採取經驗性維生素 D 補充，臨床試驗顯示可能降低子癲前症、早產與胎兒生長受限風險（條件式建議，證據仍有不確定性）。<strong>切勿將臨床試驗平均劑量 2,500 IU/日直接視為所有孕婦的標準處方</strong>。</li>
+              <li><strong>不建議常規抽血篩檢：</strong>對於一般健康孕婦，<strong>不建議全面常規檢測血清 25(OH)D</strong>，因目前尚未確立可對應臨床效益的檢驗閾值。</li>
+            </ul>
+          </div>
+        </div>
+      </div>
+
+      <!-- Sub-view B: Infant -->
+      <div id="view-infant" class="content-grid hidden">
+        <div class="card">
+          <div class="card-header">
+            <h3 class="card-title">嬰幼兒餵養與過敏風險輸入 (0–24 個月)</h3>
+          </div>
+
+          <div class="form-group">
+            <label class="form-label" for="i-months">嬰幼兒月齡 (0–24 個月)</label>
+            <input type="number" id="i-months" class="form-input" min="0" max="24" step="1" value="5" oninput="calcInfant()" />
+            <div id="err-i-months" class="err-msg">月齡請介於 0–24 個月</div>
+          </div>
+
+          <div class="form-group">
+            <label class="form-label" for="i-feed">目前主要餵養方式</label>
+            <select id="i-feed" class="form-select" onchange="calcInfant()">
+              <option value="bf">純母乳哺育</option>
+              <option value="mixed">母乳與配方奶混合餵養</option>
+              <option value="formula">全配方奶餵養</option>
+            </select>
+          </div>
+
+          <label class="check-card danger-box">
+            <input type="checkbox" id="i-allergy" onchange="calcInfant()" />
+            <span>
+              <span class="check-title">具嚴重濕疹或已確診雞蛋過敏</span>
+              <span class="check-desc">高過敏風險嬰兒：觸發 NIAID 早期過敏原引入臨床指引評估</span>
+            </span>
+          </label>
+        </div>
+
+        <div id="i-output-area"></div>
+      </div>
+    </section>
+
+    <!-- ======================================================================
+         TAB 2: 兒童及青少年期 (Children & Adolescents)
+         ====================================================================== -->
+    <section id="panel-pediatric" class="stage-panel section-gap hidden">
+      <div class="stage-banner">
+        <div>
+          <div class="banner-kicker">生活場域：校園飲食環境、家庭與社區</div>
+          <h2 class="banner-title">兒童及青少年期：由營養教育轉向校園飲食環境改革與 Co-design</h2>
+        </div>
+      </div>
+
+      <div class="content-grid">
+        <div class="card">
+          <div class="card-header">
+            <h3 class="card-title">兒少生長與飲食行為評估</h3>
+          </div>
+
+          <div class="form-grid-2">
+            <div class="form-group">
+              <label class="form-label" for="c-age">年齡 (6–18 歲)</label>
+              <input type="number" id="c-age" class="form-input" min="6" max="18" placeholder="例如 11" oninput="calcPediatric()" />
+              <div id="err-c-age" class="err-msg">年齡請介於 6–18 歲</div>
+            </div>
+            <div class="form-group">
+              <label class="form-label" for="c-sex">性別</label>
+              <select id="c-sex" class="form-select" onchange="calcPediatric()">
+                <option value="M">男童 / 青少年男性</option>
+                <option value="F">女童 / 青少年女性</option>
+              </select>
+            </div>
+          </div>
+
+          <div class="form-grid-2">
+            <div class="form-group">
+              <label class="form-label" for="c-height">身高 (cm)</label>
+              <input type="number" id="c-height" class="form-input" min="90" max="210" step="0.1" placeholder="例如 145" oninput="calcPediatric()" />
+              <div id="err-c-height" class="err-msg">身高請介於 90–210 cm</div>
+            </div>
+            <div class="form-group">
+              <label class="form-label" for="c-weight">體重 (kg)</label>
+              <input type="number" id="c-weight" class="form-input" min="15" max="150" step="0.1" placeholder="例如 50" oninput="calcPediatric()" />
+              <div id="err-c-weight" class="err-msg">體重請介於 15–150 kg</div>
+            </div>
+          </div>
+
+          <div class="metric-box mb-3">
+            <div style="display:flex; justify-content:space-between; align-items:center;">
+              <span class="metric-label">即時計算 BMI (kg/m²)</span>
+              <span id="c-bmi-val" class="metric-value">--</span>
+            </div>
+            <p class="metric-note" style="color: var(--risk-mid); font-weight: 600;">
+              成長中兒童青少年<strong>不可直接套用成人減重目標</strong>，應追蹤年齡與性別標準化 BMI 百分位軌跡。
+            </p>
+          </div>
+
+          <div class="form-grid-2">
+            <div class="form-group">
+              <label class="form-label" for="c-sugar">每週含糖飲料 (次)</label>
+              <input type="number" id="c-sugar" class="form-input" min="0" max="50" placeholder="次/週" oninput="calcPediatric()" />
+            </div>
+            <div class="form-group">
+              <label class="form-label" for="c-veg">每日蔬果 (份)</label>
+              <input type="number" id="c-veg" class="form-input" min="0" max="20" step="0.5" placeholder="份/日" oninput="calcPediatric()" />
+            </div>
+          </div>
+
+          <label class="check-card danger-box">
+            <input type="checkbox" id="c-overweight" onchange="calcPediatric()" />
+            <span>
+              <span class="check-title">經年齡性別 BMI 軌跡評估為「過重或肥胖」</span>
+              <span class="check-desc">勾選後（或 BMI 顯著偏高）將觸發 AAP 2023 密集生活型態治療 (IHBLT) 指引</span>
+            </span>
+          </label>
+        </div>
+
+        <div>
+          <!-- AAP 2023 Trigger Card -->
+          <div id="c-aap-alert" class="alert-box high hidden">
+            <div class="alert-title">
+              兒童肥胖臨床轉介處方：密集健康行為與生活型態治療 (IHBLT)
+              <button type="button" class="ev-badge alert" onclick="jumpToGuideline('ref-aap2023')">AAP 2023</button>
+            </div>
+            <p>針對 <strong>6 歲以上過重或肥胖兒童</strong>，美國兒科醫學會建議應提供或轉介密集健康行為與生活型態治療：</p>
+            <ul>
+              <li><strong>最低有效劑量：</strong>須於 <strong>3–12 個月內累計至少 26 小時</strong>的面對面或結構化介入。</li>
+              <li><strong>核心內涵：</strong>必須整合<strong>家庭全面參與、營養調整、身體活動與行為支持</strong>，不可僅靠單次校園營養衛教課。</li>
+            </ul>
+          </div>
+
+          <!-- Behavior Feedback -->
+          <div class="card">
+            <div class="card-header">
+              <h3 class="card-title">兒少飲食行為即時回饋</h3>
+            </div>
+            <div id="c-behavior-out" class="form-grid-2"></div>
+          </div>
+
+          <!-- WHO 2026 School Food Environment & Co-design Scorer -->
+          <div class="card">
+            <div class="card-header">
+              <h3 class="card-title">
+                校園飲食環境與參與式共同設計檢核計分器
+                <button type="button" class="ev-badge" onclick="jumpToGuideline('ref-who2026school')">WHO 2026</button>
+              </h3>
+              <span id="c-env-pill" class="status-pill pill-neutral">環境友善度：0%</span>
+            </div>
+
+            <label class="check-card">
+              <input type="checkbox" class="who-school-cb" onchange="calcPediatric()" />
+              <span>
+                <span class="check-title">1. 健康食物供應 <button type="button" class="ev-badge" onclick="event.preventDefault(); jumpToGuideline('ref-who2026school')">WHO 2026</button></span>
+                <span class="check-desc">穩定提供營養均衡的營養午餐、乾淨飲用水與較健康的點心選擇。</span>
+              </span>
+            </label>
+
+            <label class="check-card">
+              <input type="checkbox" class="who-school-cb" onchange="calcPediatric()" />
+              <span>
+                <span class="check-title">2. 校園食品營養標準 <button type="button" class="ev-badge strong" onclick="event.preventDefault(); jumpToGuideline('ref-who2026school')">WHO 2026 • 強烈建議</button></span>
+                <span class="check-desc">明確規範校內供應或販售食品標準，減少高糖、高鹽及不健康脂肪。</span>
+              </span>
+            </label>
+
+            <label class="check-card">
+              <input type="checkbox" class="who-school-cb" onchange="calcPediatric()" />
+              <span>
+                <span class="check-title">3. 健康選擇誘導 (Nudging) <button type="button" class="ev-badge conditional" onclick="event.preventDefault(); jumpToGuideline('ref-who2026school')">WHO 2026 • 條件式建議</button></span>
+                <span class="check-desc">將水果置於易取位置、調整供餐動線與餐點呈現（註：非每種誘導技巧皆已證實長期健康效益）。</span>
+              </span>
+            </label>
+
+            <label class="check-card">
+              <input type="checkbox" class="who-school-cb" onchange="calcPediatric()" />
+              <span>
+                <span class="check-title">4. 參與式共同設計 (Co-design) 與剩食驗證</span>
+                <span class="check-desc">納入學生、家長、教師、營養師與團膳業者共同檢視菜色口感、動線與用餐時間，並以午餐剩食量與實際攝取驗證成效。</span>
+              </span>
+            </label>
+
+            <div class="progress-track">
+              <div id="c-env-bar" class="progress-fill" style="width: 0%;"></div>
+            </div>
+            <p id="c-env-advice" class="text-xs text-sub mt-2"></p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ======================================================================
+         TAB 3: 成人期 (Adults)
+         ====================================================================== -->
+    <section id="panel-adult" class="stage-panel section-gap hidden">
+      <div class="stage-banner">
+        <div>
+          <div class="banner-kicker">生活場域：職場健康促進、門診慢性病預防</div>
+          <h2 class="banner-title">成人期：代謝症候群、心血管保護、肌少症與存骨本管理</h2>
+        </div>
+      </div>
+
+      <div class="content-grid">
+        <div class="card">
+          <div class="card-header">
+            <h3 class="card-title">成人健檢與肌骨指標輸入</h3>
+          </div>
+
+          <div class="form-grid-2">
+            <div class="form-group">
+              <label class="form-label" for="a-age">年齡 (18–74+ 歲)</label>
+              <input type="number" id="a-age" class="form-input" min="18" max="100" placeholder="例如 56" oninput="calcAdult()" />
+              <div id="err-a-age" class="err-msg">年齡請介於 18–100 歲</div>
+            </div>
+            <div class="form-group">
+              <label class="form-label" for="a-sex">性別</label>
+              <select id="a-sex" class="form-select" onchange="calcAdult()">
+                <option value="M">男性</option>
+                <option value="F">女性</option>
+              </select>
+            </div>
+          </div>
+
+          <div class="form-grid-3">
+            <div class="form-group">
+              <label class="form-label" for="a-height">身高 (cm)</label>
+              <input type="number" id="a-height" class="form-input" min="120" max="220" step="0.1" placeholder="170" oninput="calcAdult()" />
+            </div>
+            <div class="form-group">
+              <label class="form-label" for="a-weight">體重 (kg)</label>
+              <input type="number" id="a-weight" class="form-input" min="30" max="250" step="0.1" placeholder="80" oninput="calcAdult()" />
+            </div>
+            <div class="form-group">
+              <label class="form-label" for="a-waist">腰圍 (cm)</label>
+              <input type="number" id="a-waist" class="form-input" min="40" max="200" step="0.1" placeholder="94" oninput="calcAdult()" />
+            </div>
+          </div>
+
+          <div class="form-grid-2">
+            <div class="form-group">
+              <label class="form-label" for="a-sbp">收縮壓 / 舒張壓 (mmHg)</label>
+              <div style="display:flex; gap:6px; align-items:center;">
+                <input type="number" id="a-sbp" class="form-input" min="60" max="260" placeholder="135" oninput="calcAdult()" />
+                <span>/</span>
+                <input type="number" id="a-dbp" class="form-input" min="40" max="160" placeholder="88" oninput="calcAdult()" />
+              </div>
+            </div>
+            <div class="form-group">
+              <label class="form-label" for="a-hba1c">HbA1c (%) / 空腹血糖</label>
+              <div style="display:flex; gap:6px;">
+                <input type="number" id="a-hba1c" class="form-input" min="3.5" max="18" step="0.1" placeholder="A1c%" oninput="calcAdult()" />
+                <input type="number" id="a-fg" class="form-input" min="40" max="500" placeholder="FG" oninput="calcAdult()" />
+              </div>
+            </div>
+          </div>
+
+          <div class="form-grid-2">
+            <div class="form-group">
+              <label class="form-label" for="a-grip">慣用手握力 (kg)</label>
+              <input type="number" id="a-grip" class="form-input" min="1" max="100" step="0.1" placeholder="男<28 / 女<18 異常" oninput="calcAdult()" />
+            </div>
+            <div class="form-group">
+              <label class="form-label" for="a-chair">5 次坐站測試 (秒)</label>
+              <input type="number" id="a-chair" class="form-input" min="1" max="120" step="0.1" placeholder="≥12 秒異常" oninput="calcAdult()" />
+            </div>
+          </div>
+
+          <label class="check-card">
+            <input type="checkbox" id="a-cv-risk" onchange="calcAdult()" />
+            <span>
+              <span class="check-title">具心血管疾病高風險因子</span>
+              <span class="check-desc">觸發 PREDIMED 2018 修正版地中海飲食實證建議</span>
+            </span>
+          </label>
+
+          <label class="check-card">
+            <input type="checkbox" id="a-osteo" onchange="calcAdult()" />
+            <span>
+              <span class="check-title">具骨質疏鬆、吸收不良或骨折高風險適應症</span>
+              <span class="check-desc">區分是否適用 Endocrine Society 2024 一般 50–74 歲不常規補維生素 D 警訊</span>
+            </span>
+          </label>
+        </div>
+
+        <div>
+          <!-- 1. Metabolic & ADA 2026 -->
+          <div class="card">
+            <div class="card-header">
+              <h3 class="card-title">
+                1. 代謝症候群與糖尿病預防
+                <button type="button" class="ev-badge strong" onclick="jumpToGuideline('ref-ada2026')">ADA 2026</button>
+              </h3>
+              <span id="a-met-pill" class="status-pill pill-neutral">待輸入數值</span>
+            </div>
+            <div id="a-met-out" class="text-sm text-sub">請輸入身高、體重、腰圍、血壓與血糖數值以進行即時判讀。</div>
+          </div>
+
+          <!-- 2. PREDIMED 2018 -->
+          <div id="a-predimed-card" class="alert-box low hidden">
+            <div class="alert-title">
+              心血管保護實證：地中海飲食型態
+              <button type="button" class="ev-badge strong" onclick="jumpToGuideline('ref-predimed2018')">PREDIMED 2018 修正再發表版</button>
+            </div>
+            <p>針對心血管高風險成人，採用地中海型飲食並搭配<strong>特級初榨橄欖油（校正後風險比 aHR ≈ 0.69）</strong>或<strong>混合堅果（aHR ≈ 0.72）</strong>，可顯著降低主要心血管事件風險。（註：原研究曾因隨機分派執行問題撤回並重新發表，臨床引用應以 2018 修正版本為準。）</p>
+          </div>
+
+          <!-- 3. AWGS 2019 Sarcopenia -->
+          <div class="card">
+            <div class="card-header">
+              <h3 class="card-title">
+                2. 肌少症功能篩檢
+                <button type="button" class="ev-badge" onclick="jumpToGuideline('ref-awgs2019')">AWGS 2019</button>
+              </h3>
+              <span id="a-sarco-pill" class="status-pill pill-neutral">待輸入測驗值</span>
+            </div>
+            <div id="a-sarco-out" class="text-sm text-sub">請輸入握力（男 &lt;28 kg、女 &lt;18 kg 為異常）或 5 次坐站測試（≥12 秒為異常）。</div>
+          </div>
+
+          <!-- 4. Bone Health & Vitamin D -->
+          <div class="card">
+            <div class="card-header">
+              <h3 class="card-title">
+                3. 存骨本與維生素 D 實證策略
+                <button type="button" class="ev-badge conditional" onclick="jumpToGuideline('ref-endo2024')">Endocrine Society 2024</button>
+              </h3>
+              <span id="a-bone-pill" class="status-pill pill-neutral">骨骼評估</span>
+            </div>
+            <div id="a-bone-out" class="text-sm"></div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ======================================================================
+         TAB 4: 高齡期 (Older Adults)
+         ====================================================================== -->
+    <section id="panel-elderly" class="stage-panel section-gap hidden">
+      <div class="stage-banner">
+        <div>
+          <div class="banner-kicker">生活場域：社區整合照護、臨床共病管理</div>
+          <h2 class="banner-title">高齡期：MNA-SF 篩檢、GLIM 診斷、腎病共病衝突與 ICOPE 循環</h2>
+        </div>
+      </div>
+
+      <!-- Row 1: Basic Info + Precision Calculator -->
+      <div class="content-grid">
+        <div class="card">
+          <div class="card-header">
+            <h3 class="card-title">高齡基本參數與腎臟/共病狀態</h3>
+          </div>
+
+          <div class="form-grid-3">
+            <div class="form-group">
+              <label class="form-label" for="e-age">年齡 (≥65 歲)</label>
+              <input type="number" id="e-age" class="form-input" min="65" max="120" placeholder="82" oninput="calcElderly()" />
+            </div>
+            <div class="form-group">
+              <label class="form-label" for="e-height">身高 (cm)</label>
+              <input type="number" id="e-height" class="form-input" min="110" max="210" step="0.1" placeholder="160" oninput="calcElderly(true)" />
+            </div>
+            <div class="form-group">
+              <label class="form-label" for="e-weight">體重 (kg)</label>
+              <input type="number" id="e-weight" class="form-input" min="25" max="180" step="0.1" placeholder="54" oninput="calcElderly(true)" />
+            </div>
+          </div>
+
+          <div class="form-group">
+            <label class="form-label" for="e-renal">臨床腎臟 / 疾病狀態</label>
+            <select id="e-renal" class="form-select" onchange="calcElderly()">
+              <option value="healthy">一般健康高齡者（ESPEN 2022）</option>
+              <option value="ckd_nd">CKD G3–G5 未透析（KDIGO 2024）</option>
+              <option value="dialysis">穩定接受 HD 或 PD 透析（KDOQI 2020）</option>
+            </select>
+          </div>
+
+          <div class="form-group">
+            <label class="form-label" for="e-albumin">血清白蛋白 Serum Albumin (g/dL，選填示範)</label>
+            <input type="number" id="e-albumin" class="form-input" min="1.0" max="6.0" step="0.1" placeholder="例如 3.1（將示範 GLIM 2025 警訊）" oninput="calcElderly()" />
+          </div>
+
+          <label class="check-card danger-box">
+            <input type="checkbox" id="e-frail" onchange="calcElderly()" />
+            <span>
+              <span class="check-title">合併衰弱 / 肌少症 / 食慾不振或體重下降</span>
+              <span class="check-desc">若同時為 CKD 未透析，將立即觸發高齡腎病共病衝突紅燈警訊</span>
+            </span>
+          </label>
+        </div>
+
+        <div>
+          <!-- CKD Comorbidity Conflict Red Alert -->
+          <div id="e-ckd-conflict" class="alert-box high hidden">
+            <div class="alert-title">
+              高齡 CKD 共病衝突紅燈警訊：切勿一概套用嚴格低蛋白飲食！
+              <button type="button" class="ev-badge alert" onclick="jumpToGuideline('ref-kdigo2024')">KDIGO 2024</button>
+              <button type="button" class="ev-badge alert" onclick="jumpToGuideline('ref-espen2022')">ESPEN 2022</button>
+            </div>
+            <p>個案屬 <strong>CKD G3–G5 未透析</strong> 且同時具有<strong>衰弱/肌少症/體重下降、MNA-SF ≤ 11 或 GLIM 營養不良</strong>。臨床須審慎平衡「腎功能惡化風險」與「蛋白質熱量營養不良（PEW）風險」，<strong>不可盲目嚴格限制蛋白質</strong>，必須優先確保<strong>總熱量攝取充足</strong>並進入疾病別個人化營養處方！</p>
+          </div>
+
+          <!-- Precision Nutrition Prescription -->
+          <div class="card">
+            <div class="card-header">
+              <h3 class="card-title">熱量、蛋白質與 ONS 處方精準計算器</h3>
+              <span id="e-pro-badge-wrap"></span>
+            </div>
+
+            <div class="form-grid-2">
+              <div class="metric-box">
+                <div class="metric-label">初步熱量估算 (30 kcal/kg/day) <button type="button" class="ev-badge" onclick="jumpToGuideline('ref-espen2022')">ESPEN 2022</button></div>
+                <div id="e-kcal-val" class="metric-value">-- kcal/日</div>
+                <div class="metric-note">附註：肥胖、水腫、腎功能不全或急性疾病患者需依調整體重與臨床狀況個別修正。</div>
+              </div>
+
+              <div class="metric-box">
+                <div id="e-pro-label" class="metric-label">蛋白質建議目標</div>
+                <div id="e-pro-val" class="metric-value" style="color: var(--primary-amber);">-- g/日</div>
+                <div id="e-pro-note" class="metric-note">請輸入體重以即時試算</div>
+              </div>
+            </div>
+
+            <!-- ONS Box -->
+            <div id="e-ons-box" class="alert-box mt-3 hidden" style="margin-bottom:0;">
+              <div class="alert-title">
+                口服營養補充品 (ONS) 處方建議
+                <button type="button" class="ev-badge conditional" onclick="jumpToGuideline('ref-espen2022')">ESPEN 2022</button>
+              </div>
+              <p>因 MNA-SF ≤ 7 或 GLIM 確診營養不良，若一般飲食與食物強化仍無法達標，建議於營養師評估下處方 ONS：額外提供 <strong>≥ 400 kcal/day 與 ≥ 30 g/day 蛋白質</strong>，持續<strong>至少 1 個月並每月檢視成效</strong>。（註：僅針對有營養適應症個案，非鼓勵所有健康長者常規補充。）</p>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Row 2: MNA-SF & GLIM 2025 -->
+      <div class="content-grid section-gap">
+        <!-- MNA-SF 6 Questions -->
+        <div class="card">
+          <div class="card-header">
+            <h3 class="card-title">MNA-SF 迷你營養評估短表（6 題，滿分 14 分）</h3>
+            <span id="e-mna-pill" class="status-pill pill-low">總分：14 分（正常）</span>
+          </div>
+
+          <div class="form-grid-2">
+            <div class="form-group">
+              <label class="form-label text-xs" for="mna-1">A. 近 3 個月食慾/進食量是否減少？</label>
+              <select id="mna-1" class="form-select" onchange="calcElderly()">
+                <option value="2" selected>2 分：食量無減少</option>
+                <option value="1">1 分：食量中度減少</option>
+                <option value="0">0 分：食量嚴重減少</option>
+              </select>
+            </div>
+            <div class="form-group">
+              <label class="form-label text-xs" for="mna-2">B. 近 3 個月體重下降情形？</label>
+              <select id="mna-2" class="form-select" onchange="calcElderly()">
+                <option value="3" selected>3 分：無體重下降</option>
+                <option value="2">2 分：下降 1–3 公斤</option>
+                <option value="1">1 分：不知道</option>
+                <option value="0">0 分：下降超過 3 公斤</option>
+              </select>
+            </div>
+            <div class="form-group">
+              <label class="form-label text-xs" for="mna-3">C. 活動能力</label>
+              <select id="mna-3" class="form-select" onchange="calcElderly()">
+                <option value="2" selected>2 分：可以自由外出</option>
+                <option value="1">1 分：可下床/離椅，但無法外出</option>
+                <option value="0">0 分：臥床或坐輪椅</option>
+              </select>
+            </div>
+            <div class="form-group">
+              <label class="form-label text-xs" for="mna-4">D. 近 3 個月急性疾病或重大心理壓力？</label>
+              <select id="mna-4" class="form-select" onchange="calcElderly()">
+                <option value="2" selected>2 分：無</option>
+                <option value="0">0 分：有</option>
+              </select>
+            </div>
+            <div class="form-group">
+              <label class="form-label text-xs" for="mna-5">E. 神經精神問題（失智或憂鬱）</label>
+              <select id="mna-5" class="form-select" onchange="calcElderly()">
+                <option value="2" selected>2 分：無精神問題</option>
+                <option value="1">1 分：輕度失智</option>
+                <option value="0">0 分：嚴重失智或憂鬱</option>
+              </select>
+            </div>
+            <div class="form-group">
+              <label class="form-label text-xs" for="mna-6">F. BMI (或小腿圍 CC 替代)</label>
+              <select id="mna-6" class="form-select" onchange="calcElderly()">
+                <option value="3" selected>3 分：BMI ≥ 23（或小腿圍 ≥ 31 cm）</option>
+                <option value="2">2 分：21 ≤ BMI &lt; 23</option>
+                <option value="1">1 分：19 ≤ BMI &lt; 21</option>
+                <option value="0">0 分：BMI &lt; 19（或小腿圍 &lt; 31 cm）</option>
+              </select>
+            </div>
+          </div>
+
+          <div id="e-mna-advice" class="alert-box low" style="margin-bottom:0;"></div>
+        </div>
+
+        <!-- GLIM 2025 Diagnosis -->
+        <div class="card">
+          <div class="card-header">
+            <h3 class="card-title">
+              營養不良標準化診斷檢核器
+              <button type="button" class="ev-badge" onclick="jumpToGuideline('ref-glim2025')">GLIM 2025</button>
+            </h3>
+            <span id="e-glim-pill" class="status-pill pill-low">未達確診標準</span>
+          </div>
+
+          <div class="form-label" style="color: var(--primary-amber);">表現型標準 (Phenotypic) — 須至少符合 1 項</div>
+          <label class="check-card"><input type="checkbox" class="glim-p" onchange="calcElderly()" /><span class="check-title">非自願體重下降</span></label>
+          <label class="check-card"><input type="checkbox" class="glim-p" onchange="calcElderly()" /><span class="check-title">低 BMI（依亞洲年齡標準）</span></label>
+          <label class="check-card"><input type="checkbox" class="glim-p" onchange="calcElderly()" /><span class="check-title">肌肉量減少（經實證工具評估）</span></label>
+
+          <div class="form-label mt-3" style="color: var(--accent-coral);">病因型標準 (Etiologic) — 須至少符合 1 項</div>
+          <label class="check-card"><input type="checkbox" class="glim-e" onchange="calcElderly()" /><span class="check-title">食物攝取減少或消化吸收不良</span></label>
+          <label class="check-card"><input type="checkbox" class="glim-e" onchange="calcElderly()" /><span class="check-title">急性 / 慢性發炎或疾病負擔</span></label>
+
+          <!-- Serum Albumin Alert -->
+          <div id="e-albumin-alert" class="alert-box mt-3" style="margin-bottom:0;">
+            <div class="alert-title">
+              血清白蛋白臨床判讀警訊
+              <button type="button" class="ev-badge alert" onclick="jumpToGuideline('ref-glim2025')">GLIM 2025</button>
+            </div>
+            <p id="e-albumin-msg"><strong>血清白蛋白低下不可單獨診斷營養不良！</strong>白蛋白受發炎反應、肝病、腎病與體液狀態影響甚鉅，須同時符合至少 1 項表現型與 1 項病因型標準方可確立營養不良診斷。</p>
+          </div>
+        </div>
+      </div>
+
+      <!-- Row 3: WHO ICOPE 2025 -->
+      <div class="card section-gap">
+        <div class="card-header">
+          <h3 class="card-title">
+            社區高齡整合照護：內在能力初篩與四步驟循環
+            <button type="button" class="ev-badge strong" onclick="jumpToGuideline('ref-icope2025')">WHO ICOPE 2025 第二版</button>
+          </h3>
+          <span id="e-icope-count" class="status-pill pill-neutral">已檢核內在能力異常：0 項</span>
+        </div>
+
+        <div class="form-label mb-2">內在能力 (Intrinsic Capacity) 初步異常篩檢勾選：</div>
+        <div class="chip-group">
+          <label class="chip" style="display:inline-flex;align-items:center;gap:6px;"><input type="checkbox" class="icope-cap" onchange="updateIcopeCaps()" /> 活力 / 營養（體重減輕/食慾差）</label>
+          <label class="chip" style="display:inline-flex;align-items:center;gap:6px;"><input type="checkbox" class="icope-cap" onchange="updateIcopeCaps()" /> 認知功能</label>
+          <label class="chip" style="display:inline-flex;align-items:center;gap:6px;"><input type="checkbox" class="icope-cap" onchange="updateIcopeCaps()" /> 行動能力（肌力/平衡）</label>
+          <label class="chip" style="display:inline-flex;align-items:center;gap:6px;"><input type="checkbox" class="icope-cap" onchange="updateIcopeCaps()" /> 視覺與聽覺</label>
+          <label class="chip" style="display:inline-flex;align-items:center;gap:6px;"><input type="checkbox" class="icope-cap" onchange="updateIcopeCaps()" /> 心理狀態（憂鬱情緒）</label>
+        </div>
+
+        <div class="icope-steps">
+          <button type="button" id="ic-step-1" class="icope-step-btn active" onclick="selectIcopeStep(1)">
+            <div class="text-xs" style="color:var(--primary-amber);font-weight:700;">步驟一</div>
+            <div class="check-title">初步評估</div>
+            <div class="check-desc">MNA-SF 與內在能力初篩</div>
+          </button>
+          <button type="button" id="ic-step-2" class="icope-step-btn" onclick="selectIcopeStep(2)">
+            <div class="text-xs" style="color:var(--primary-amber);font-weight:700;">步驟二</div>
+            <div class="check-title">深入評估</div>
+            <div class="check-desc">食慾、咀嚼吞嚥、用藥與共病</div>
+          </button>
+          <button type="button" id="ic-step-3" class="icope-step-btn" onclick="selectIcopeStep(3)">
+            <div class="text-xs" style="color:var(--primary-amber);font-weight:700;">步驟三</div>
+            <div class="check-title">個人化計畫</div>
+            <div class="check-desc">飲食調整、ONS、阻力運動與轉介</div>
+          </button>
+          <button type="button" id="ic-step-4" class="icope-step-btn" onclick="selectIcopeStep(4)">
+            <div class="text-xs" style="color:var(--primary-amber);font-weight:700;">步驟四</div>
+            <div class="check-title">執行與監測</div>
+            <div class="check-desc">定期追蹤體重、握力與行動能力</div>
+          </button>
+        </div>
+        <div id="icope-step-detail" class="metric-box mt-3 text-sm"></div>
+      </div>
+    </section>
+
+    <!-- ======================================================================
+         SECTION 3: 三層次成效評估儀表板 (localStorage + SVG Chart + CSV)
+         ====================================================================== -->
+    <section id="dashboard-section" class="card section-gap">
+      <div class="card-header">
+        <div>
+          <span id="dash-stage-pill" class="status-pill pill-mid mb-2">目前追蹤階段：孕產婦及嬰幼兒期</span>
+          <h2 class="card-title">可持續追蹤模式：三層次成效評估儀表板</h2>
+          <p class="text-xs text-sub mt-2">同時追蹤「執行成效」、「行為改變」與「中長期健康結果」（支援瀏覽器 localStorage 自動保存與 CSV 匯出）</p>
+        </div>
+        <div class="header-actions no-print">
+          <button type="button" class="btn btn-sm btn-outline" onclick="exportStageCSV()">匯出 CSV 報表</button>
+          <button type="button" class="btn btn-sm btn-outline" onclick="clearStageLogs()" style="color:var(--risk-high);">清除此階段紀錄</button>
+        </div>
+      </div>
+
+      <!-- Add Record Form -->
+      <form id="log-form" onsubmit="addLogRecord(event)" class="metric-box mb-3 no-print">
+        <div class="form-grid-2">
+          <div class="form-group">
+            <label class="form-label text-xs" for="log-tp">追蹤時間點</label>
+            <select id="log-tp" class="form-select">
+              <option value="基線 (Baseline)">基線 (Baseline)</option>
+              <option value="1 個月">1 個月追蹤</option>
+              <option value="3 個月">3 個月追蹤</option>
+              <option value="6 個月">6 個月追蹤</option>
+              <option value="12 個月">12 個月追蹤</option>
+            </select>
+          </div>
+          <div class="form-group">
+            <label class="form-label text-xs" for="log-date">紀錄日期</label>
+            <input type="date" id="log-date" class="form-input" required />
+          </div>
+        </div>
+
+        <div class="form-grid-3">
+          <div class="form-group">
+            <label id="lbl-t1" class="form-label text-xs" for="log-t1">層次一：執行成效</label>
+            <input type="text" id="log-t1" class="form-input" required />
+          </div>
+          <div class="form-group">
+            <label id="lbl-t2" class="form-label text-xs" for="log-t2">層次二：行為改變</label>
+            <input type="text" id="log-t2" class="form-input" required />
+          </div>
+          <div class="form-group">
+            <label id="lbl-t3" class="form-label text-xs" for="log-t3">層次三：中長期健康結果</label>
+            <input type="text" id="log-t3" class="form-input" required />
+          </div>
+        </div>
+
+        <div style="display:flex; flex-wrap:wrap; align-items:center; justify-content:space-between; gap:12px;">
+          <div style="display:flex; align-items:center; gap:10px; flex:1; min-width:220px;">
+            <label class="form-label text-xs" for="log-score" style="margin:0; white-space:nowrap;">綜合達標評分：</label>
+            <input type="range" id="log-score" min="0" max="100" value="75" style="flex:1; accent-color:var(--primary-amber);" oninput="document.getElementById('log-score-txt').textContent = this.value + '%'" />
+            <strong id="log-score-txt" style="color:var(--primary-amber); width:40px;">75%</strong>
+          </div>
+          <button type="submit" class="btn btn-primary">新增追蹤紀錄</button>
+        </div>
+      </form>
+
+      <!-- Lightweight SVG Trend Chart -->
+      <div id="svg-chart-box" class="svg-chart-wrap hidden">
+        <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:8px;">
+          <span class="text-xs" style="font-weight:700;">介入達標率追蹤趨勢圖（SVG 視覺化）</span>
+          <span id="chart-avg-label" class="text-xs" style="color:var(--risk-low); font-weight:700;"></span>
+        </div>
+        <div id="svg-chart-inner" style="width:100%; overflow-x:auto;"></div>
+      </div>
+
+      <!-- History Table -->
+      <div class="table-wrap">
+        <table>
+          <thead>
+            <tr>
+              <th>時間點 / 日期</th>
+              <th>層次一：執行成效</th>
+              <th>層次二：行為改變</th>
+              <th>層次三：中長期健康結果</th>
+              <th>綜合達標</th>
+              <th class="no-print">操作</th>
+            </tr>
+          </thead>
+          <tbody id="log-tbody"></tbody>
+        </table>
+      </div>
+
+      <!-- Research Rigor & Digital Equity Reminder -->
+      <div class="alert-box mt-4" style="margin-bottom:0;">
+        <div class="alert-title">研究嚴謹度與數位公平性檢核提醒</div>
+        <p class="text-xs">評估營養介入計畫是否真正有效，除了追蹤上述三層次指標外，仍須檢視：<strong>(1) 研究設計與有無對照組、(2) 足夠的追蹤時間與失訪率、(3) 是否控制年齡、共病與社經條件等混雜因子</strong>。推動數位衛教時，應特別檢核<strong>不熟悉智慧型手機之高齡長者或偏鄉族群是否被排除</strong>，並搭配實體社區據點或家屬協助；數位工具可提升效率，但核心仍須回歸個人化專業營養處方。</p>
+      </div>
+    </section>
+
+    <!-- ======================================================================
+         SECTION 4: 國際機構規範與醫學會指引實證總覽表 (Filterable)
+         ====================================================================== -->
+    <section id="guidelines-section" class="card section-gap">
+      <div class="card-header">
+        <div>
+          <h2 class="card-title">國際機構規範與專科醫學會指引實證總覽表 (16 項核心實證)</h2>
+          <p class="text-xs text-sub mt-2">點擊上方評估頁中的任何「國際實證徽章」皆可快速跳轉並高亮顯示對應文獻；亦可依生命階段篩選。</p>
+        </div>
+      </div>
+
+      <div class="chip-group no-print" id="ref-filter-chips">
+        <button type="button" class="chip active" onclick="filterGuidelines('all', this)">全部 (16)</button>
+        <button type="button" class="chip" onclick="filterGuidelines('maternal', this)">孕產婦及嬰幼兒</button>
+        <button type="button" class="chip" onclick="filterGuidelines('pediatric', this)">兒童及青少年</button>
+        <button type="button" class="chip" onclick="filterGuidelines('adult', this)">成人</button>
+        <button type="button" class="chip" onclick="filterGuidelines('elderly', this)">高齡</button>
+      </div>
+
+      <div class="table-wrap">
+        <table>
+          <thead>
+            <tr>
+              <th>國際機構 / 學會 / 研究</th>
+              <th>年份</th>
+              <th>適用階段</th>
+              <th>核心實證建議與臨床應用重點</th>
+            </tr>
+          </thead>
+          <tbody id="guidelines-tbody"></tbody>
+        </table>
+      </div>
+    </section>
+  </main>
+
+  <footer>
+    <div class="container">
+      <p style="font-weight:700; color:var(--text-main);">全生命週期營養照護與國際實證評估平台（Life-course Nutrition Evidence-Based Platform）</p>
+      <p class="mt-2">本單頁應用程式完全以原生前端技術建構，僅供臨床營養衛教、跨專業評估參考與健康自我追蹤使用；實際疾病診斷與處方劑量請諮詢醫師與臨床營養師。</p>
+    </div>
+  </footer>
+
+  <!-- ========================================================================
+       VANILLA JAVASCRIPT APPLICATION LOGIC
+       ======================================================================== -->
+  <script>
+    'use strict';
+
+    /* ========================================================================
+       1. DATA & CONSTANTS
+       ======================================================================== */
+    let currentStage = 'maternal';
+    let maternalSub = 'pregnant';
+    const STORAGE_KEY = 'lc_ebm_logs_v2_';
+
+    const STAGE_CONFIG = {
+      maternal: {
+        name: '孕產婦及嬰幼兒期',
+        t1: '層次一：執行成效（衛教完成率 / 產檢評估）',
+        t1Ph: '例如：LINE 個人化衛教完成、完成補充劑疊加盤點',
+        t2: '層次二：行為改變（補充品遵從率 / 哺餵行為）',
+        t2Ph: '例如：鐵劑與鈣片錯開遵從率 90%、純母乳哺育',
+        t3: '層次三：中長期健康結果（孕期貧血 / 體重 / 成長）',
+        t3Ph: '例如：產檢 Hb 11.9 g/dL、孕期增重適中'
+      },
+      pediatric: {
+        name: '兒童及青少年期',
+        t1: '層次一：執行成效（校園食品達標率 / 教案參與）',
+        t1Ph: '例如：校園食品 100% 符合營養標準、參與 Co-design',
+        t2: '層次二：行為改變（含糖飲料 / 午餐剩食量）',
+        t2Ph: '例如：含糖飲料減至 ≤1 次/週、午餐剩食降至 12%',
+        t3: '層次三：中長期健康結果（年齡性別 BMI 軌跡）',
+        t3Ph: '例如：BMI 百分位軌跡趨穩、每日蔬果達 5 份'
+      },
+      adult: {
+        name: '成人期',
+        t1: '層次一：執行成效（營養師諮詢率 / 健檢追蹤）',
+        t1Ph: '例如：完成個別化 MNT 諮詢 2 次、參與職場健康餐',
+        t2: '層次二：行為改變（地中海飲食 / 阻力運動頻率）',
+        t2Ph: '例如：每週阻力訓練 2 次、改採橄欖油與堅果',
+        t3: '層次三：中長期健康結果（腰圍 / HbA1c / 握力）',
+        t3Ph: '例如：減重 5.6%、腰圍降 4 cm、HbA1c 降至 5.8%'
+      },
+      elderly: {
+        name: '高齡期',
+        t1: '層次一：執行成效（社區篩檢率 / 醫療轉介）',
+        t1Ph: '例如：完成 MNA-SF 篩檢、轉介腎臟科與營養師',
+        t2: '層次二：行為改變（ONS 遵從率 / 蛋白質達標）',
+        t2Ph: '例如：ONS 遵從率 85%、每日熱量達 1,600 kcal',
+        t3: '層次三：中長期健康結果（MNA-SF / 握力 / 行動）',
+        t3Ph: '例如：MNA-SF 由 8 分升至 11 分、體重回升 1.4 kg'
+      }
+    };
+
+    const ICOPE_DETAILS = {
+      1: '<strong>步驟一：初步評估</strong> — 於社區據點或基層門診快速執行 MNA-SF 篩檢與內在能力六大面向初篩（活力、認知、行動、視覺、聽覺、心理），及早辨識體重下降與衰弱風險。',
+      2: '<strong>步驟二：深入評估</strong> — 對初篩異常個案深入盤點食慾變化、口腔牙口與咀嚼吞嚥功能、多重用藥、共病（如 CKD、糖尿病）與獨居經濟條件，並依 GLIM 2025 確立營養不良診斷。',
+      3: '<strong>步驟三：個人化整合照護計畫</strong> — 擬定疾病別精準熱量與蛋白質目標、食物質地調整、必要時處方 ONS（≥400 kcal & ≥30 g 蛋白/日），並結合阻力/平衡運動與醫療社福轉介。',
+      4: '<strong>步驟四：執行與定期監測</strong> — 每月定期再評估體重、ONS 與飲食攝取達標率、握力、步行能力與生活品質，將單純問卷篩檢轉化為可持續的在地照護循環。'
+    };
+
+    /* 16 Core International Guidelines & Studies */
+    const GUIDELINES_DATA = [
+      { id: 'ref-who2023cf', org: 'WHO：Complementary Feeding Guideline（副食品指引）', year: '2023', stages: ['maternal'], stageLabel: '孕產婦及嬰幼兒', summary: '6–23 個月副食品應重視鐵、鋅、蛋白質與多樣性（肉、魚、蛋、豆、蔬果），避免長期以稀飯/米糊為主，並持續哺乳至 2 歲或更久。' },
+      { id: 'ref-whounicef2026', org: 'WHO / UNICEF：嬰幼兒餵養更新資料', year: '2026', stages: ['maternal'], stageLabel: '孕產婦及嬰幼兒', summary: '強調出生後前 6 個月純母乳哺育；未採母乳哺育者應確保安全且合適的替代餵養。' },
+      { id: 'ref-cdc2026', org: 'US CDC：嬰兒維生素 D 補充建議', year: '2026', stages: ['maternal'], stageLabel: '孕產婦及嬰幼兒', summary: '12 個月以下嬰兒每日需要 400 IU 維生素 D；純母乳或混合餵養嬰兒通常應自出生後不久開始每日補充。' },
+      { id: 'ref-niaid', org: 'NIAID：花生過敏預防臨床指引', year: '現行', stages: ['maternal'], stageLabel: '孕產婦及嬰幼兒', summary: '嚴重濕疹或雞蛋過敏之高風險嬰兒，經專業風險評估後可於 4–6 個月適時引入適當質地花生食品，不應過度延後（不取代一般 6 個月副食品原則）。' },
+      { id: 'ref-whonih', org: 'WHO 孕期營養指引 & 美國 NIH ODS', year: '現行', stages: ['maternal'], stageLabel: '孕產婦及嬰幼兒', summary: '區分補充量與總攝取量：葉酸補充 400 μg/日、元素鐵補充 30–60 mg/日、低鈣族群元素鈣補充 1.5–2.0 g/日；碘總攝取 220 μg/日、膽鹼 450 mg/日。' },
+      { id: 'ref-endo2024', org: 'Endocrine Society：Vitamin D for the Prevention of Disease', year: '2024', stages: ['maternal', 'adult'], stageLabel: '孕產婦 / 成人', summary: '孕婦經驗性補充維生素 D（條件式建議，試驗平均 2,500 IU 不可直套為標準處方），不建議健康孕婦及一般健康 50–74 歲成人常規抽血篩檢 25(OH)D 或高劑量常規補充。' },
+      { id: 'ref-who2026school', org: 'WHO：Policies & Interventions to Create Healthy School Food Environments', year: '2026', stages: ['pediatric'], stageLabel: '兒童及青少年', summary: '建立校園食品營養標準（強烈建議）、健康食物供應，以及健康選擇誘導 Nudging（條件式建議，須驗證長期成效）。' },
+      { id: 'ref-aap2023', org: 'AAP：兒童及青少年肥胖臨床實務指引 (IHBLT)', year: '2023', stages: ['pediatric'], stageLabel: '兒童及青少年', summary: '6 歲以上過重或肥胖兒少應提供或轉介密集健康行為與生活型態治療（IHBLT），於 3–12 個月內至少累計 26 小時家庭參與及行為支持。' },
+      { id: 'ref-ada2026', org: 'ADA：Standards of Care in Diabetes', year: '2026', stages: ['adult'], stageLabel: '成人', summary: '強調由營養師制定個別化醫學營養治療（MNT）；過重/肥胖成人減重 5–7% 具明確代謝改善效益，飲食重蔬果、全穀、豆類、堅果與優質蛋白。' },
+      { id: 'ref-predimed2018', org: 'PREDIMED Study（2018 修正再發表版）', year: '2018', stages: ['adult'], stageLabel: '成人', summary: '心血管高風險成人採地中海飲食搭配特級初榨橄欖油（aHR ≈ 0.69）或堅果（aHR ≈ 0.72），顯著降低主要心血管事件（須引用 2018 修正版）。' },
+      { id: 'ref-awgs2019', org: 'AWGS：亞洲肌少症工作小組共識', year: '2019', stages: ['adult', 'elderly'], stageLabel: '成人 / 高齡', summary: '低握力界定為男 <28 kg、女 <18 kg；5 次坐站測試 ≥12 秒提示肌力下降，須結合肌肉量評估並將營養介入與規律阻力訓練整合。' },
+      { id: 'ref-espen2022', org: 'ESPEN：Clinical Nutrition and Hydration in Geriatrics', year: '2022', stages: ['elderly'], stageLabel: '高齡', summary: '高齡初步熱量估算約 30 kcal/kg/日、一般高齡蛋白質 ≥1.0 g/kg/日；營養不良且飲食無法達標者可處方 ONS（額外 ≥400 kcal 與 ≥30 g 蛋白/日，至少 1 個月並每月檢視）。' },
+      { id: 'ref-glim2025', org: 'GLIM：Malnutrition Consensus Update', year: '2025', stages: ['elderly'], stageLabel: '高齡', summary: '確立營養不良診斷須同時滿足至少 1 項表現型與 1 項病因型標準；血清白蛋白低下受發炎與肝腎影響，不可單獨診斷營養不良。' },
+      { id: 'ref-icope2025', org: 'WHO：ICOPE Second Edition（高齡整合照護）', year: '2025', stages: ['elderly'], stageLabel: '高齡', summary: '及早發現六大內在能力下降，落實「初步評估 → 深入評估 → 個人化計畫 → 執行與監測」四步驟社區照護循環。' },
+      { id: 'ref-kdigo2024', org: 'KDIGO：慢性腎臟病 (CKD) 臨床指引', year: '2024', stages: ['elderly'], stageLabel: '高齡', summary: 'CKD G3–G5 未透析成人蛋白質建議約 0.8 g/kg/日；但高齡合併衰弱或肌少症者須權衡 PEW 風險，不可一概嚴格限蛋白。' },
+      { id: 'ref-kdoqi2020', org: 'KDOQI：慢性腎臟病透析營養指引', year: '2020', stages: ['elderly'], stageLabel: '高齡', summary: '穩定接受血液透析（HD）或腹膜透析（PD）患者，蛋白質建議目標為 1.0–1.2 g/kg/日，並確保總熱量充足。' }
+    ];
+
+    /* ========================================================================
+       2. UI UTILITIES (Toast, Validation, Navigation, Badge Jump)
+       ======================================================================== */
+    function showToast(msg, type = 'info') {
+      const wrap = document.getElementById('toast-container');
+      const div = document.createElement('div');
+      div.className = `toast ${type}`;
+      div.textContent = msg;
+      wrap.appendChild(div);
+      requestAnimationFrame(() => div.classList.add('show'));
+      setTimeout(() => {
+        div.classList.remove('show');
+        setTimeout(() => div.remove(), 260);
+      }, 2800);
+    }
+
+    function readNum(id, min, max, errId = null) {
+      const el = document.getElementById(id);
+      const err = errId ? document.getElementById(errId) : null;
+      if (!el) return null;
+      const raw = el.value.trim();
+      if (raw === '') {
+        el.classList.remove('invalid');
+        if (err) err.classList.remove('show');
+        return null;
+      }
+      const val = parseFloat(raw);
+      if (isNaN(val) || val < min || val > max) {
+        el.classList.add('invalid');
+        if (err) err.classList.add('show');
+        return null;
+      }
+      el.classList.remove('invalid');
+      if (err) err.classList.remove('show');
+      return val;
+    }
+
+    function switchStage(stage) {
+      currentStage = stage;
+      document.querySelectorAll('.stage-panel').forEach(p => p.classList.add('hidden'));
+      document.getElementById(`panel-${stage}`).classList.remove('hidden');
+
+      document.querySelectorAll('.stage-card').forEach(c => c.classList.remove('active'));
+      document.getElementById(`tab-${stage}`).classList.add('active');
+
+      syncDashboardStage();
+    }
+
+    function setMaternalSub(sub) {
+      maternalSub = sub;
+      document.getElementById('sub-preg-btn').classList.toggle('active', sub === 'pregnant');
+      document.getElementById('sub-inf-btn').classList.toggle('active', sub === 'infant');
+      document.getElementById('view-pregnant').classList.toggle('hidden', sub !== 'pregnant');
+      document.getElementById('view-infant').classList.toggle('hidden', sub !== 'infant');
+      if (sub === 'pregnant') calcPregnant(); else calcInfant();
+    }
+
+    function jumpToGuidelines() {
+      document.getElementById('guidelines-section').scrollIntoView({ behavior: 'smooth', block: 'start' });
+    }
+
+    function jumpToGuideline(refId) {
+      // Ensure "all" filter is active so the target row is visible
+      const allChip = document.querySelector('#ref-filter-chips .chip');
+      filterGuidelines('all', allChip);
+
+      const row = document.getElementById(refId);
+      if (row) {
+        row.scrollIntoView({ behavior: 'smooth', block: 'center' });
+        row.classList.add('highlight-row');
+        setTimeout(() => row.classList.remove('highlight-row'), 2600);
+      }
+    }
+
+    function escapeHtml(s) {
+      return String(s).replace(/[&<>"']/g, m => ({ '&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;' }[m]));
+    }
+
+    /* ========================================================================
+       3. TAB 1: MATERNAL & INFANT CALCULATIONS
+       ======================================================================== */
+    function calcPregnant() {
+      const stage = document.getElementById('p-stage').value;
+      const bmi = readNum('p-bmi', 12, 60, 'err-p-bmi');
+      const lowCa = document.getElementById('p-low-ca').checked;
+      const anemia = document.getElementById('p-anemia').checked;
+
+      const supFolate = readNum('p-sup-folate', 0, 10000);
+      const supIron = readNum('p-sup-iron', 0, 300);
+      const supVitD = readNum('p-sup-vitd', 0, 20000);
+      const supCa = readNum('p-sup-ca', 0, 5000);
+
+      // BMI Summary
+      const bmiTxt = document.getElementById('p-bmi-text');
+      if (bmi !== null) {
+        let msg = '';
+        if (bmi < 18.5) msg = `BMI <strong>${bmi.toFixed(1)}</strong>（過輕）— 建議孕期總增重約 12.5–18 kg，留意熱量與微量營養素攝取。`;
+        else if (bmi < 24) msg = `BMI <strong>${bmi.toFixed(1)}</strong>（正常）— 建議孕期總增重約 11.5–16 kg。`;
+        else if (bmi < 27) msg = `BMI <strong>${bmi.toFixed(1)}</strong>（過重）— 建議孕期總增重約 7–11.5 kg，預防妊娠糖尿病。`;
+        else msg = `BMI <strong>${bmi.toFixed(1)}</strong>（肥胖）— 建議孕期總增重約 5–9 kg，加強產檢血糖與血壓監測。`;
+        bmiTxt.innerHTML = msg;
+      } else {
+        bmiTxt.textContent = '請輸入孕前 BMI 以顯示個別化建議。';
+      }
+
+      // Nutrient Table (Distinguishing Supplement vs Total Intake)
+      const stageName = { pre: '備孕期', t1: '第一孕期', t2: '第二孕期', t3: '第三孕期' }[stage];
+      const rows = [
+        {
+          n: '葉酸 (Folate)',
+          t: '<span class="status-pill pill-high">額外補充量</span>',
+          v: '400 μg / 日',
+          d: `備孕與懷孕初期（目前：${stageName}）預防神經管缺陷；高風險者另評。 <button type="button" class="ev-badge" onclick="jumpToGuideline('ref-whonih')">WHO / NIH ODS</button>`
+        },
+        {
+          n: '元素鐵 (Iron)',
+          t: '<span class="status-pill pill-high">額外補充量</span>',
+          v: '30–60 mg / 日',
+          d: (anemia ? '<strong style="color:var(--risk-high);">具孕期貧血史：須由醫師評估治療劑量與追蹤血紅素。</strong> ' : '') +
+             `孕期搭配葉酸 400 μg，預防缺鐵性貧血。 <button type="button" class="ev-badge" onclick="jumpToGuideline('ref-whonih')">WHO</button>`
+        },
+        {
+          n: '碘 (Iodine)',
+          t: '<span class="status-pill pill-low">飲食總攝取量</span>',
+          v: '220 μg / 日',
+          d: `支持胎兒甲狀腺與神經發育（優先由含碘鹽與海產攝取）。 <button type="button" class="ev-badge" onclick="jumpToGuideline('ref-whonih')">NIH ODS</button>`
+        },
+        {
+          n: '膽鹼 (Choline)',
+          t: '<span class="status-pill pill-low">適足總攝取量</span>',
+          v: '450 mg / 日',
+          d: `支持細胞膜與胎兒腦神經發育（蛋黃、豆魚肉來源）。 <button type="button" class="ev-badge" onclick="jumpToGuideline('ref-whonih')">NIH ODS</button>`
+        },
+        {
+          n: '元素鈣 (Calcium)',
+          t: lowCa ? '<span class="status-pill pill-high">額外補充量</span>' : '<span class="status-pill pill-low">飲食總攝取量</span>',
+          v: lowCa ? '額外補充 1.5–2.0 g / 日' : '飲食達 1,000 mg / 日',
+          d: lowCa
+            ? `<strong style="color:var(--risk-high);">低鈣族群介入：</strong>分次額外補充元素鈣 1.5–2.0 g/日以降低子癲前症風險（與鐵劑錯開服用）。 <button type="button" class="ev-badge" onclick="jumpToGuideline('ref-whonih')">WHO</button>`
+            : `維持每日乳品與高鈣食物攝取。 <button type="button" class="ev-badge" onclick="jumpToGuideline('ref-whonih')">WHO</button>`
+        }
+      ];
+
+      document.getElementById('p-nutrient-tbody').innerHTML = rows.map(r => `
+        <tr>
+          <td style="font-weight:700; white-space:nowrap;">${r.n}</td>
+          <td style="white-space:nowrap;">${r.t}</td>
+          <td style="font-weight:700; white-space:nowrap;">${r.v}</td>
+          <td class="text-xs">${r.d}</td>
+        </tr>
+      `).join('');
+
+      // Supplement Overlap Checker
+      const findings = [];
+      let hasHigh = false, hasMid = false;
+
+      if (supFolate !== null) {
+        if (supFolate < 400 && (stage === 'pre' || stage === 't1')) {
+          hasMid = true;
+          findings.push(`⚠️ <strong>葉酸補充偏低 (${supFolate} μg)：</strong>備孕與第一孕期建議每日額外補充至少 400 μg。`);
+        } else if (supFolate > 1000) {
+          hasHigh = true;
+          findings.push(`🔴 <strong>葉酸補充超過一般上限 (${supFolate} μg > 1,000 μg)：</strong>除非具高 NTD 風險並經醫師處方，否則須防重複疊加。`);
+        } else {
+          findings.push(`✅ <strong>葉酸 (${supFolate} μg)：</strong>位於適當補充範圍。`);
+        }
+      }
+
+      if (supIron !== null) {
+        if (supIron < 30 && stage !== 'pre') {
+          hasMid = true;
+          findings.push(`⚠️ <strong>元素鐵低於 WHO 建議 (${supIron} mg < 30 mg)：</strong>${anemia ? '個案有貧血史，請務必由醫師調整劑量。' : '孕期建議 30–60 mg/日。'}`);
+        } else if (supIron > 60) {
+          hasHigh = true;
+          findings.push(`🔴 <strong>元素鐵超過常規預防量 (${supIron} mg > 60 mg)：</strong>請核對是否同時服用孕婦綜合維他命與單方鐵劑，避免過量或腸胃不適。`);
+        } else {
+          findings.push(`✅ <strong>元素鐵 (${supIron} mg)：</strong>符合 WHO 30–60 mg/日建議範圍。`);
+        }
+      }
+
+      if (supVitD !== null) {
+        if (supVitD > 4000) {
+          hasHigh = true;
+          findings.push(`🔴 <strong>維生素 D 超過成人上限攝取量 (${supVitD} IU > 4,000 IU)：</strong>請立即核對多瓶補充劑是否重複疊加！`);
+        } else if (supVitD >= 2500) {
+          hasMid = true;
+          findings.push(`⚠️ <strong>維生素 D 劑量較高 (${supVitD} IU)：</strong>Endocrine Society 2024 提醒，試驗平均劑量 2,500 IU 不可直接視為所有孕婦標準處方，建議由醫師或營養師個別核對。`);
+        } else if (supVitD > 0) {
+          findings.push(`✅ <strong>維生素 D (${supVitD} IU)：</strong>位於安全經驗性補充區間內。`);
+        }
+      }
+
+      if (supCa !== null) {
+        if (supCa > 2500) {
+          hasHigh = true;
+          findings.push(`🔴 <strong>元素鈣超過每日上限 (${supCa} mg > 2,500 mg)：</strong>過高鈣劑量可能干擾鐵質吸收並增加腎結石風險。`);
+        } else if (lowCa && supCa < 1500) {
+          hasMid = true;
+          findings.push(`⚠️ <strong>低鈣族群補充尚未達標 (${supCa} mg < 1,500 mg)：</strong>WHO 建議低鈣族群額外補充 1.5–2.0 g/日（建議分次且與鐵劑錯開）。`);
+        } else if (supCa > 0) {
+          findings.push(`✅ <strong>元素鈣 (${supCa} mg)：</strong>劑量合理（提醒單次吸收上限約 500 mg，建議分次服用）。`);
+        }
+      }
+
+      const pill = document.getElementById('p-overlap-pill');
+      const list = document.getElementById('p-overlap-list');
+      if (findings.length === 0) {
+        pill.className = 'status-pill pill-neutral';
+        pill.textContent = '待輸入補充劑量';
+        list.innerHTML = '請於左側輸入目前額外服用的葉酸、鐵、維生素 D 或鈣劑量，系統將即時比對國際上限與建議範圍，預防重複補充與過量風險。';
+      } else {
+        if (hasHigh) { pill.className = 'status-pill pill-high'; pill.textContent = '檢出過量 / 重複風險'; }
+        else if (hasMid) { pill.className = 'status-pill pill-mid'; pill.textContent = '需調整或核對劑量'; }
+        else { pill.className = 'status-pill pill-low'; pill.textContent = '補充劑量合理'; }
+        list.innerHTML = `<ul style="padding-left:18px; color:var(--text-main);">${findings.map(f => `<li style="margin-bottom:5px;">${f}</li>`).join('')}</ul>`;
+      }
+    }
+
+    function calcInfant() {
+      const m = readNum('i-months', 0, 24, 'err-i-months');
+      const feed = document.getElementById('i-feed').value;
+      const allergy = document.getElementById('i-allergy').checked;
+      const out = document.getElementById('i-output-area');
+
+      if (m === null) {
+        out.innerHTML = `<div class="card text-sm text-sub">請輸入有效的嬰幼兒月齡 (0–24 個月)。</div>`;
+        return;
+      }
+
+      let html = '';
+
+      // 1. Feeding stage card
+      if (m < 6) {
+        html += `<div class="alert-box low">
+          <div class="alert-title">0–6 個月哺餵核心指引 <button type="button" class="ev-badge strong" onclick="jumpToGuideline('ref-whounicef2026')">WHO / UNICEF 2026</button></div>
+          <p>強調出生後前 6 個月<strong>純母乳哺育</strong>；若未採母乳哺育，應確保安全且合適的嬰兒配方奶替代餵養，一般健康嬰兒無須過早引入副食品。</p>
+        </div>`;
+      } else {
+        html += `<div class="alert-box">
+          <div class="alert-title">6–23 個月副食品與多樣性指引 <button type="button" class="ev-badge strong" onclick="jumpToGuideline('ref-who2023cf')">WHO 2023</button></div>
+          <p>滿 6 個月起加入安全、營養密度足夠的副食品，並<strong>持續哺乳至 2 歲或更久</strong>。<strong>臨床警示：避免長期僅以稀飯、米糊等澱粉食物為主</strong>，應每日重視<strong>鐵、鋅、優質蛋白質與食物多樣性</strong>（肉類、魚類、蛋、豆類、蔬菜及水果）。</p>
+        </div>`;
+      }
+
+      // 2. Vitamin D 400 IU
+      if (m < 12 && (feed === 'bf' || feed === 'mixed')) {
+        html += `<div class="alert-box">
+          <div class="alert-title">嬰兒維生素 D 每日補充提醒 <button type="button" class="ev-badge strong" onclick="jumpToGuideline('ref-cdc2026')">US CDC 2026</button></div>
+          <p><strong>目前為 ${m} 個月大且屬${feed === 'bf' ? '純母乳' : '混合'}餵養：</strong>12 個月以下嬰兒每日需 <strong>400 IU 維生素 D</strong>，純母乳或混合餵養嬰兒通常應自出生後不久開始每日規律補充。</p>
+        </div>`;
+      } else if (m < 12 && feed === 'formula') {
+        html += `<div class="card">
+          <div class="card-header"><h3 class="card-title">維生素 D 評估 <button type="button" class="ev-badge" onclick="jumpToGuideline('ref-cdc2026')">US CDC 2026</button></h3></div>
+          <p class="text-sm">12 個月以下嬰兒每日需 400 IU 維生素 D；全配方奶餵養者若每日奶量不足約 1,000 mL，仍須評估補充差額。</p>
+        </div>`;
+      }
+
+      // 3. NIAID Allergy Alert
+      if (allergy) {
+        const inWindow = (m >= 4 && m <= 6);
+        html += `<div class="alert-box high">
+          <div class="alert-title">高過敏風險嬰兒：早期過敏原引入評估 <button type="button" class="ev-badge alert" onclick="jumpToGuideline('ref-niaid')">NIAID 指引</button></div>
+          <p>${inWindow ? '<strong>目前正值 4–6 個月關鍵評估窗口！</strong>' : ''}因個案具<strong>嚴重濕疹或雞蛋過敏</strong>，過度延後過敏原引入並非理想策略。建議經兒科或過敏專科醫師風險評估後，於 <strong>4–6 個月大且已具備進食副食品能力時</strong>，引入適當質地（如稀釋花生泥/粉，防嗆噎）之花生食品以降低花生過敏風險。（註：此為高風險族群個別建議，不取代一般 6 個月副食品之公共衛生原則。）</p>
+        </div>`;
+      }
+
+      out.innerHTML = html;
+    }
+
+    /* ========================================================================
+       4. TAB 2: PEDIATRIC CALCULATIONS
+       ======================================================================== */
+    function calcPediatric() {
+      const age = readNum('c-age', 6, 18, 'err-c-age');
+      const h = readNum('c-height', 90, 210, 'err-c-height');
+      const w = readNum('c-weight', 15, 150, 'err-c-weight');
+      const sugar = readNum('c-sugar', 0, 50);
+      const veg = readNum('c-veg', 0, 20);
+      const overweight = document.getElementById('c-overweight').checked;
+
+      let bmi = null;
+      if (h && w) {
+        bmi = w / ((h / 100) ** 2);
+        document.getElementById('c-bmi-val').textContent = bmi.toFixed(1);
+      } else {
+        document.getElementById('c-bmi-val').textContent = '--';
+      }
+
+      // AAP 2023 Trigger: Age >= 6 & (overweight checked OR BMI >= 25)
+      const triggerAap = (age === null || age >= 6) && (overweight || (bmi !== null && bmi >= 25));
+      document.getElementById('c-aap-alert').classList.toggle('hidden', !triggerAap);
+
+      // Behavior feedback
+      const out = document.getElementById('c-behavior-out');
+      const sugarBox = sugar === null
+        ? `<div class="metric-box"><div class="metric-label">含糖飲料頻率</div><div class="text-sm text-sub mt-2">待輸入</div></div>`
+        : `<div class="metric-box" style="border-color:${sugar <= 1 ? 'var(--risk-low-border)' : 'var(--risk-high-border)'}; background:${sugar <= 1 ? 'var(--risk-low-bg)' : 'var(--risk-high-bg)'};">
+            <div class="metric-label">每週含糖飲料</div>
+            <div class="metric-value" style="font-size:1.1rem; color:${sugar <= 1 ? 'var(--risk-low)' : 'var(--risk-high)'};">${sugar} 次/週（${sugar <= 1 ? '表現良好' : '建議減量並改飲白開水'}）</div>
+          </div>`;
+
+      const vegBox = veg === null
+        ? `<div class="metric-box"><div class="metric-label">每日蔬果攝取</div><div class="text-sm text-sub mt-2">待輸入</div></div>`
+        : `<div class="metric-box" style="border-color:${veg >= 5 ? 'var(--risk-low-border)' : 'var(--risk-mid-border)'}; background:${veg >= 5 ? 'var(--risk-low-bg)' : 'var(--risk-mid-bg)'};">
+            <div class="metric-label">每日蔬果份數</div>
+            <div class="metric-value" style="font-size:1.1rem; color:${veg >= 5 ? 'var(--risk-low)' : 'var(--risk-mid)'};">${veg} 份/日（${veg >= 5 ? '符合 5 蔬果目標' : '建議透過校園菜色改良提升至 ≥5 份'}）</div>
+          </div>`;
+      out.innerHTML = sugarBox + vegBox;
+
+      // WHO 2026 School Environment Scorer
+      const cbs = document.querySelectorAll('.who-school-cb');
+      let count = 0;
+      cbs.forEach(c => { if (c.checked) count++; });
+      const pct = Math.round((count / cbs.length) * 100);
+      const pill = document.getElementById('c-env-pill');
+      pill.textContent = `環境友善度：${pct}% (${count}/4)`;
+      pill.className = 'status-pill ' + (pct >= 75 ? 'pill-low' : pct >= 50 ? 'pill-mid' : 'pill-high');
+      document.getElementById('c-env-bar').style.width = pct + '%';
+
+      const adviceEl = document.getElementById('c-env-advice');
+      if (count === 4) adviceEl.textContent = '✅ 校園環境與參與式共同設計完整落實，建議持續追蹤營養午餐剩食量與長期飲食維持率。';
+      else if (!cbs[1].checked) adviceEl.textContent = '⚠️ 優先改善建議：WHO 2026 對「校園食品營養標準」提出強烈建議，應優先規範合作社與供餐減糖減鹽標準。';
+      else adviceEl.textContent = '💡 建議導入 Co-design 共同設計，邀請學生、家長與團膳業者共同解決口感與取餐動線阻力。';
+    }
+
+    /* ========================================================================
+       5. TAB 3: ADULT CALCULATIONS
+       ======================================================================== */
+    function calcAdult() {
+      const age = readNum('a-age', 18, 100, 'err-a-age');
+      const sex = document.getElementById('a-sex').value;
+      const h = readNum('a-height', 120, 220);
+      const w = readNum('a-weight', 30, 250);
+      const waist = readNum('a-waist', 40, 200);
+      const sbp = readNum('a-sbp', 60, 260);
+      const dbp = readNum('a-dbp', 40, 160);
+      const a1c = readNum('a-hba1c', 3.5, 18);
+      const fg = readNum('a-fg', 40, 500);
+      const grip = readNum('a-grip', 1, 100);
+      const chair = readNum('a-chair', 1, 120);
+      const cvRisk = document.getElementById('a-cv-risk').checked;
+      const osteo = document.getElementById('a-osteo').checked;
+
+      // 1. Metabolic & ADA 2026
+      const bmi = (h && w) ? (w / ((h / 100) ** 2)) : null;
+      const waistLim = sex === 'M' ? 90 : 80;
+      const flags = [];
+      if (waist !== null && waist >= waistLim) flags.push(`中心肥胖（腰圍 ${waist} cm ≥ ${waistLim} cm）`);
+      if ((sbp !== null && sbp >= 130) || (dbp !== null && dbp >= 85)) flags.push(`血壓偏高（${sbp || '--'}/${dbp || '--'} mmHg）`);
+      if ((a1c !== null && a1c >= 5.7) || (fg !== null && fg >= 100)) flags.push(`血糖異常風險（${a1c ? 'HbA1c ' + a1c + '%' : ''} ${fg ? '空腹血糖 ' + fg : ''}）`);
+
+      const metPill = document.getElementById('a-met-pill');
+      const metOut = document.getElementById('a-met-out');
+
+      if (bmi === null && flags.length === 0 && waist === null) {
+        metPill.className = 'status-pill pill-neutral';
+        metPill.textContent = '待輸入數值';
+        metOut.innerHTML = '請輸入身高、體重、腰圍、血壓與血糖數值以進行即時判讀。';
+      } else {
+        if (flags.length >= 2 || (bmi && bmi >= 27)) { metPill.className = 'status-pill pill-high'; metPill.textContent = '代謝高風險警訊'; }
+        else if (flags.length === 1 || (bmi && bmi >= 24)) { metPill.className = 'status-pill pill-mid'; metPill.textContent = '代謝邊緣風險'; }
+        else { metPill.className = 'status-pill pill-low'; metPill.textContent = '代謝指標正常'; }
+
+        let html = '';
+        if (bmi !== null) {
+          const cat = bmi < 18.5 ? '過輕' : bmi < 24 ? '正常' : bmi < 27 ? '過重' : '肥胖';
+          html += `<p><strong>計算 BMI：${bmi.toFixed(1)} kg/m²（${cat}）</strong></p>`;
+          if (bmi >= 24 && w) {
+            const l5 = (w * 0.05).toFixed(1), l7 = (w * 0.07).toFixed(1);
+            const tHigh = (w * 0.95).toFixed(1), tLow = (w * 0.93).toFixed(1);
+            html += `<div class="alert-box mt-2" style="margin-bottom:8px;">
+              <strong>ADA 2026 個別化醫學營養治療 (MNT) 與 5%–7% 減重目標：</strong><br>
+              建議減輕 <strong>${l5} – ${l7} kg</strong>（目標體重區間 <strong>${tLow} – ${tHigh} kg</strong>），具明確代謝改善意義；飲食重視蔬菜、完整水果、豆類、全穀、堅果與優質蛋白，減少含糖飲料與高度加工食品。
+            </div>`;
+          }
+        }
+        if (flags.length > 0) {
+          html += `<ul style="padding-left:18px; color:var(--risk-high); font-weight:600;">${flags.map(f => `<li>${f}</li>`).join('')}</ul>`;
+        } else {
+          html += `<p style="color:var(--risk-low); font-weight:600;">腰圍、血壓與血糖均在正常範圍，建議持續定期健檢追蹤。</p>`;
+        }
+        metOut.innerHTML = html;
+      }
+
+      // 2. PREDIMED 2018
+      document.getElementById('a-predimed-card').classList.toggle('hidden', !cvRisk);
+
+      // 3. AWGS 2019 Sarcopenia
+      const gripLim = sex === 'M' ? 28 : 18;
+      const lowGrip = grip !== null && grip < gripLim;
+      const slowChair = chair !== null && chair >= 12;
+      const sPill = document.getElementById('a-sarco-pill');
+      const sOut = document.getElementById('a-sarco-out');
+
+      if (grip === null && chair === null) {
+        sPill.className = 'status-pill pill-neutral';
+        sPill.textContent = '待輸入測驗值';
+        sOut.innerHTML = `請輸入握力（${sex === 'M' ? '男 <28 kg' : '女 <18 kg'} 為異常）或 5 次坐站測試（≥12 秒為異常）。`;
+      } else if (lowGrip || slowChair) {
+        sPill.className = 'status-pill pill-high';
+        sPill.textContent = '肌力下降警示';
+        const reasons = [];
+        if (lowGrip) reasons.push(`握力 ${grip} kg (< ${gripLim} kg)`);
+        if (slowChair) reasons.push(`5 次坐站 ${chair} 秒 (≥ 12 秒)`);
+        sOut.innerHTML = `<div class="alert-box high" style="margin-bottom:0;">
+          <strong>AWGS 2019 異常提示：</strong>${reasons.join('、')}。<br>
+          後續須結合肌肉量評估；<strong>介入必須整合「足量蛋白質營養」與「規律阻力訓練」，切勿只鼓勵購買蛋白補充品！</strong>
+        </div>`;
+      } else {
+        sPill.className = 'status-pill pill-low';
+        sPill.textContent = '肌力篩檢正常';
+        sOut.innerHTML = `<p style="color:var(--risk-low); font-weight:600;">握力與坐站功能均正常，建議維持每週至少 2 次規律阻力運動。</p>`;
+      }
+
+      // 4. Bone Health & Endocrine Society 2024
+      const bPill = document.getElementById('a-bone-pill');
+      const bOut = document.getElementById('a-bone-out');
+      let bHtml = '';
+      if (osteo) {
+        bPill.className = 'status-pill pill-high';
+        bPill.textContent = '具臨床骨鬆適應症';
+        bHtml += `<p style="color:var(--risk-high); font-weight:600;">具骨質疏鬆、吸收不良或骨折高風險：應由醫師評估 DXA 骨密度檢查、個別化鈣與維生素 D 劑量及藥物治療。</p>`;
+      } else if (age !== null && age >= 50 && age <= 74) {
+        bPill.className = 'status-pill pill-mid';
+        bPill.textContent = '50–74 歲實證警訊';
+        bHtml += `<div class="alert-box" style="margin-bottom:8px;">
+          <strong>Endocrine Society 2024 警訊：</strong>針對<strong>一般健康 50–74 歲成人（無骨鬆或吸收不良適應症）</strong>，<strong>不建議為預防疾病而常規補充超過建議攝取量的維生素 D，也不建議無適應症時普遍抽血篩檢 25(OH)D</strong>。
+        </div>`;
+      } else {
+        bPill.className = 'status-pill pill-low';
+        bPill.textContent = '一般存骨本策略';
+      }
+      bHtml += `<p class="text-xs text-sub mt-2">存骨本整合策略：先估算日常飲食鈣質缺口（不足再補）、確保足夠蛋白質攝取、規律負重/肌力/平衡運動，並依風險評估骨折機率與 DXA。</p>`;
+      bOut.innerHTML = bHtml;
+    }
+
+    /* ========================================================================
+       6. TAB 4: ELDERLY CALCULATIONS (MNA-SF, GLIM 2025, ESPEN/KDIGO/KDOQI, ICOPE)
+       ======================================================================== */
+    function calcElderly(syncMnaF = false) {
+      const h = readNum('e-height', 110, 210);
+      const w = readNum('e-weight', 25, 180);
+      const renal = document.getElementById('e-renal').value;
+      const alb = readNum('e-albumin', 1.0, 6.0);
+      const frail = document.getElementById('e-frail').checked;
+
+      // Auto-sync MNA-SF Q6 from BMI when height & weight edited
+      if (syncMnaF && h && w) {
+        const bmi = w / ((h / 100) ** 2);
+        const q6 = document.getElementById('mna-6');
+        if (bmi < 19) q6.value = '0';
+        else if (bmi < 21) q6.value = '1';
+        else if (bmi < 23) q6.value = '2';
+        else q6.value = '3';
+      }
+
+      // 1. MNA-SF Score
+      let mna = 0;
+      for (let i = 1; i <= 6; i++) mna += parseInt(document.getElementById(`mna-${i}`).value, 10) || 0;
+
+      const mnaPill = document.getElementById('e-mna-pill');
+      const mnaAdv = document.getElementById('e-mna-advice');
+      if (mna >= 12) {
+        mnaPill.className = 'status-pill pill-low';
+        mnaPill.textContent = `總分：${mna} 分（正常）`;
+        mnaAdv.className = 'alert-box low';
+        mnaAdv.innerHTML = '<strong>12–14 分（營養狀態正常）：</strong>定期追蹤與健康飲食、阻力運動促進。';
+      } else if (mna >= 8) {
+        mnaPill.className = 'status-pill pill-mid';
+        mnaPill.textContent = `總分：${mna} 分（營養不良風險）`;
+        mnaAdv.className = 'alert-box';
+        mnaAdv.innerHTML = '<strong>8–11 分（營養不良風險）：</strong>應深入評估飲食攝取、體重變化、共病與咀嚼吞嚥功能，並安排飲食強化。';
+      } else {
+        mnaPill.className = 'status-pill pill-high';
+        mnaPill.textContent = `總分：${mna} 分（營養不良）`;
+        mnaAdv.className = 'alert-box high';
+        mnaAdv.innerHTML = '<strong>0–7 分（營養不良）：</strong>應儘快完整評估（含 GLIM 診斷），安排營養介入（如 ONS）與必要醫療轉介。';
+      }
+
+      // 2. GLIM 2025 Diagnosis
+      const hasP = Array.from(document.querySelectorAll('.glim-p')).some(c => c.checked);
+      const hasE = Array.from(document.querySelectorAll('.glim-e')).some(c => c.checked);
+      const glimConfirmed = hasP && hasE;
+      const gPill = document.getElementById('e-glim-pill');
+      if (glimConfirmed) {
+        gPill.className = 'status-pill pill-high';
+        gPill.textContent = '確立 GLIM 營養不良診斷';
+      } else if (hasP || hasE) {
+        gPill.className = 'status-pill pill-mid';
+        gPill.textContent = '僅符合單側標準（未達確診）';
+      } else {
+        gPill.className = 'status-pill pill-low';
+        gPill.textContent = '未達確診標準';
+      }
+
+      // Serum Albumin Alert Enhancement
+      const albBox = document.getElementById('e-albumin-alert');
+      const albMsg = document.getElementById('e-albumin-msg');
+      if (alb !== null && alb < 3.5) {
+        albBox.className = 'alert-box high mt-3';
+        albMsg.innerHTML = `<strong>偵測到血清白蛋白偏低 (${alb.toFixed(1)} g/dL < 3.5)！</strong>依 GLIM 2025 共識，<strong>不可單憑血清白蛋白低下診斷營養不良</strong>（其深受發炎、肝病、腎病與體液狀態影響），請以上方表現型＋病因型標準作為診斷依據。`;
+      } else {
+        albBox.className = 'alert-box mt-3';
+        albMsg.innerHTML = `<strong>血清白蛋白低下不可單獨診斷營養不良！</strong>白蛋白受發炎反應、肝病、腎病與體液狀態影響甚鉅，須同時符合至少 1 項表現型與 1 項病因型標準方可確立營養不良診斷。`;
+      }
+
+      // 3. Calories & Protein Calculator
+      document.getElementById('e-kcal-val').textContent = w ? `約 ${Math.round(w * 30)} kcal/日` : '-- kcal/日';
+      const proLabel = document.getElementById('e-pro-label');
+      const proVal = document.getElementById('e-pro-val');
+      const proNote = document.getElementById('e-pro-note');
+      const badgeWrap = document.getElementById('e-pro-badge-wrap');
+
+      if (renal === 'healthy') {
+        badgeWrap.innerHTML = `<button type="button" class="ev-badge strong" onclick="jumpToGuideline('ref-espen2022')">ESPEN 2022</button>`;
+        proLabel.textContent = '一般健康高齡蛋白質目標（≥ 1.0 g/kg/day）';
+        proVal.textContent = w ? `至少 ${(w * 1.0).toFixed(0)} – ${(w * 1.2).toFixed(0)} g/日` : '-- g/日';
+        proNote.textContent = '預防肌少症與衰弱，建議平均分配於三餐。';
+      } else if (renal === 'ckd_nd') {
+        badgeWrap.innerHTML = `<button type="button" class="ev-badge conditional" onclick="jumpToGuideline('ref-kdigo2024')">KDIGO 2024</button>`;
+        proLabel.textContent = 'CKD G3–G5 未透析蛋白質參考（約 0.8 g/kg/day）';
+        proVal.textContent = w ? `約 ${(w * 0.8).toFixed(0)} g/日` : '-- g/日';
+        proNote.textContent = '須同步確保總熱量充足；若合併衰弱或營養不良須個別化調整！';
+      } else {
+        badgeWrap.innerHTML = `<button type="button" class="ev-badge strong" onclick="jumpToGuideline('ref-kdoqi2020')">KDOQI 2020</button>`;
+        proLabel.textContent = '穩定 HD / PD 透析蛋白質目標（1.0–1.2 g/kg/day）';
+        proVal.textContent = w ? `${(w * 1.0).toFixed(0)} – ${(w * 1.2).toFixed(0)} g/日` : '-- g/日';
+        proNote.textContent = '補充透析流失並預防蛋白質熱量營養不良 (PEW)。';
+      }
+
+      // 4. CKD Comorbidity Conflict Red Alert
+      const showConflict = (renal === 'ckd_nd') && (frail || mna <= 11 || glimConfirmed);
+      document.getElementById('e-ckd-conflict').classList.toggle('hidden', !showConflict);
+
+      // 5. ONS Card (Triggered when MNA-SF <= 7 or GLIM confirmed)
+      const showOns = (mna <= 7 || glimConfirmed);
+      document.getElementById('e-ons-box').classList.toggle('hidden', !showOns);
+    }
+
+    function updateIcopeCaps() {
+      const checked = document.querySelectorAll('.icope-cap:checked').length;
+      const el = document.getElementById('e-icope-count');
+      el.textContent = `已檢核內在能力異常：${checked} 項`;
+      el.className = 'status-pill ' + (checked === 0 ? 'pill-low' : checked <= 2 ? 'pill-mid' : 'pill-high');
+    }
+
+    function selectIcopeStep(step) {
+      for (let i = 1; i <= 4; i++) {
+        document.getElementById(`ic-step-${i}`).classList.toggle('active', i === step);
+      }
+      document.getElementById('icope-step-detail').innerHTML = ICOPE_DETAILS[step];
+    }
+
+    /* ========================================================================
+       7. 3-TIER FOLLOW-UP DASHBOARD (localStorage + SVG Chart + CSV Export)
+       ======================================================================== */
+    function getLogs(stage) {
+      try { return JSON.parse(localStorage.getItem(STORAGE_KEY + stage)) || []; }
+      catch (e) { return []; }
+    }
+
+    function saveLogs(stage, list) {
+      try { localStorage.setItem(STORAGE_KEY + stage, JSON.stringify(list)); }
+      catch (e) { showToast('瀏覽器儲存受限，僅暫存於本次瀏覽。', 'warn'); }
+    }
+
+    function syncDashboardStage() {
+      const cfg = STAGE_CONFIG[currentStage];
+      document.getElementById('dash-stage-pill').textContent = `目前追蹤階段：${cfg.name}`;
+      document.getElementById('lbl-t1').textContent = cfg.t1;
+      document.getElementById('log-t1').placeholder = cfg.t1Ph;
+      document.getElementById('lbl-t2').textContent = cfg.t2;
+      document.getElementById('log-t2').placeholder = cfg.t2Ph;
+      document.getElementById('lbl-t3').textContent = cfg.t3;
+      document.getElementById('log-t3').placeholder = cfg.t3Ph;
+      renderLogs();
+    }
+
+    function addLogRecord(e) {
+      e.preventDefault();
+      const tp = document.getElementById('log-tp').value;
+      const date = document.getElementById('log-date').value;
+      const t1 = document.getElementById('log-t1').value.trim();
+      const t2 = document.getElementById('log-t2').value.trim();
+      const t3 = document.getElementById('log-t3').value.trim();
+      const score = parseInt(document.getElementById('log-score').value, 10);
+      if (!date || !t1 || !t2 || !t3) return;
+
+      const list = getLogs(currentStage);
+      list.push({ id: Date.now(), tp, date, t1, t2, t3, score });
+      saveLogs(currentStage, list);
+
+      document.getElementById('log-t1').value = '';
+      document.getElementById('log-t2').value = '';
+      document.getElementById('log-t3').value = '';
+      renderLogs();
+      showToast('已新增三層次追蹤紀錄', 'success');
+    }
+
+    function deleteLogRecord(id) {
+      const list = getLogs(currentStage).filter(x => x.id !== id);
+      saveLogs(currentStage, list);
+      renderLogs();
+      showToast('已刪除該筆追蹤紀錄');
+    }
+
+    function clearStageLogs() {
+      saveLogs(currentStage, []);
+      renderLogs();
+      showToast(`已清除「${STAGE_CONFIG[currentStage].name}」追蹤紀錄`);
+    }
+
+    function renderLogs() {
+      const list = getLogs(currentStage);
+      const tbody = document.getElementById('log-tbody');
+      const chartBox = document.getElementById('svg-chart-box');
+
+      if (list.length === 0) {
+        chartBox.classList.add('hidden');
+        tbody.innerHTML = `<tr><td colspan="6" style="text-align:center; padding:24px; color:var(--text-sub);">尚無此階段追蹤紀錄，請於上方新增或點擊頂部「帶入當前階段臨床範例」。</td></tr>`;
+        return;
+      }
+
+      // Render Table (newest first)
+      tbody.innerHTML = [...list].reverse().map(item => {
+        const cls = item.score >= 80 ? 'pill-low' : item.score >= 55 ? 'pill-mid' : 'pill-high';
+        return `<tr>
+          <td style="white-space:nowrap;"><strong>${escapeHtml(item.tp)}</strong><div class="text-xs text-sub">${escapeHtml(item.date)}</div></td>
+          <td class="text-xs">${escapeHtml(item.t1)}</td>
+          <td class="text-xs">${escapeHtml(item.t2)}</td>
+          <td class="text-xs">${escapeHtml(item.t3)}</td>
+          <td style="white-space:nowrap;"><span class="status-pill ${cls}">${item.score}%</span></td>
+          <td class="no-print"><button type="button" class="btn btn-sm btn-outline" onclick="deleteLogRecord(${item.id})">刪除</button></td>
+        </tr>`;
+      }).join('');
+
+      // Render Lightweight SVG Line + Bar Chart (chronological)
+      chartBox.classList.remove('hidden');
+      const avg = Math.round(list.reduce((s, x) => s + x.score, 0) / list.length);
+      document.getElementById('chart-avg-label').textContent = `平均綜合達標率：${avg}%（共 ${list.length} 筆）`;
+
+      const pts = list.slice(-6);
+      const W = 560, H = 140, padL = 36, padR = 24, padT = 22, padB = 30;
+      const plotW = W - padL - padR, plotH = H - padT - padB;
+      const stepX = pts.length > 1 ? plotW / (pts.length - 1) : 0;
+
+      const coords = pts.map((p, i) => {
+        const x = pts.length === 1 ? padL + plotW / 2 : padL + i * stepX;
+        const y = padT + plotH - (p.score / 100) * plotH;
+        return { x, y, ...p };
+      });
+
+      const poly = coords.map(c => `${c.x.toFixed(1)},${c.y.toFixed(1)}`).join(' ');
+      const bars = coords.map(c => `<rect x="${(c.x - 14).toFixed(1)}" y="${c.y.toFixed(1)}" width="28" height="${(padT + plotH - c.y).toFixed(1)}" rx="5" fill="#FDE68A" opacity="0.75" />`).join('');
+      const circles = coords.map(c => `
+        <circle cx="${c.x.toFixed(1)}" cy="${c.y.toFixed(1)}" r="5" fill="#D97706" stroke="#FFFFFF" stroke-width="2" />
+        <text x="${c.x.toFixed(1)}" y="${(c.y - 9).toFixed(1)}" text-anchor="middle" font-size="11" font-weight="700" fill="#2D2522">${c.score}%</text>
+        <text x="${c.x.toFixed(1)}" y="${H - 8}" text-anchor="middle" font-size="10" fill="#6B5B53">${escapeHtml(c.tp.split(' ')[0])}</text>
+      `).join('');
+
+      document.getElementById('svg-chart-inner').innerHTML = `
+        <svg viewBox="0 0 ${W} ${H}" style="width:100%; max-width:680px; height:auto; display:block; margin:0 auto;">
+          <line x1="${padL}" y1="${padT}" x2="${W - padR}" y2="${padT}" stroke="#E6DDD3" stroke-dasharray="3 3" />
+          <line x1="${padL}" y1="${padT + plotH / 2}" x2="${W - padR}" y2="${padT + plotH / 2}" stroke="#E6DDD3" stroke-dasharray="3 3" />
+          <line x1="${padL}" y1="${padT + plotH}" x2="${W - padR}" y2="${padT + plotH}" stroke="#D5C8BA" />
+          <text x="6" y="${padT + 4}" font-size="10" fill="#6B5B53">100%</text>
+          <text x="12" y="${padT + plotH / 2 + 4}" font-size="10" fill="#6B5B53">50%</text>
+          <text x="18" y="${padT + plotH + 4}" font-size="10" fill="#6B5B53">0%</text>
+          ${bars}
+          ${coords.length > 1 ? `<polyline fill="none" stroke="#E06D53" stroke-width="2.5" points="${poly}" />` : ''}
+          ${circles}
+        </svg>`;
+    }
+
+    function exportStageCSV() {
+      const list = getLogs(currentStage);
+      if (list.length === 0) {
+        showToast('目前尚無可匯出的追蹤紀錄', 'warn');
+        return;
+      }
+      const header = ['生命週期階段', '時間點', '日期', '層次一：執行成效', '層次二：行為改變', '層次三：中長期健康結果', '綜合達標(%)'];
+      const rows = list.map(r => [
+        STAGE_CONFIG[currentStage].name, r.tp, r.date, r.t1, r.t2, r.t3, r.score
+      ].map(v => `"${String(v).replace(/"/g, '""')}"`).join(','));
+
+      const csv = '\uFEFF' + [header.join(','), ...rows].join('\n');
+      const blob = new Blob([csv], { type: 'text/csv;charset=utf-8;' });
+      const url = URL.createObjectURL(blob);
+      const a = document.createElement('a');
+      a.href = url;
+      a.download = `全生命週期營養追蹤_${STAGE_CONFIG[currentStage].name}.csv`;
+      document.body.appendChild(a);
+      a.click();
+      document.body.removeChild(a);
+      URL.revokeObjectURL(url);
+      showToast('已匯出 CSV 追蹤報表', 'success');
+    }
+
+    /* ========================================================================
+       8. GUIDELINES REFERENCE TABLE
+       ======================================================================== */
+    function renderGuidelines(filter = 'all') {
+      const rows = filter === 'all'
+        ? GUIDELINES_DATA
+        : GUIDELINES_DATA.filter(g => g.stages.includes(filter));
+
+      document.getElementById('guidelines-tbody').innerHTML = rows.map(g => `
+        <tr id="${g.id}">
+          <td style="font-weight:700;">${g.org}</td>
+          <td style="white-space:nowrap;">${g.year}</td>
+          <td style="white-space:nowrap;"><span class="status-pill pill-neutral">${g.stageLabel}</span></td>
+          <td class="text-xs">${g.summary}</td>
+        </tr>
+      `).join('');
+    }
+
+    function filterGuidelines(stage, btnEl) {
+      document.querySelectorAll('#ref-filter-chips .chip').forEach(c => c.classList.remove('active'));
+      if (btnEl) btnEl.classList.add('active');
+      renderGuidelines(stage);
+    }
+
+    /* ========================================================================
+       9. CLINICAL SAMPLE DATA & RESET
+       ======================================================================== */
+    function loadSampleData() {
+      const today = new Date().toISOString().split('T')[0];
+
+      if (currentStage === 'maternal') {
+        if (maternalSub === 'pregnant') {
+          document.getElementById('p-stage').value = 't2';
+          document.getElementById('p-bmi').value = '21.8';
+          document.getElementById('p-low-ca').checked = true;
+          document.getElementById('p-anemia').checked = true;
+          document.getElementById('p-sup-folate').value = '400';
+          document.getElementById('p-sup-iron').value = '45';
+          document.getElementById('p-sup-vitd').value = '2600';
+          document.getElementById('p-sup-ca').value = '1000';
+          calcPregnant();
+        } else {
+          document.getElementById('i-months').value = '5';
+          document.getElementById('i-feed').value = 'bf';
+          document.getElementById('i-allergy').checked = true;
+          calcInfant();
+        }
+        if (getLogs('maternal').length === 0) {
+          saveLogs('maternal', [
+            { id: 1, tp: '基線 (Baseline)', date: '2026-08-15', t1: '完成產檢營養篩檢與補充劑疊加盤點', t2: '乳品攝取不足、鐵與鈣未錯開服用', t3: '孕期 Hb 10.5 g/dL（輕度貧血）', score: 52 },
+            { id: 2, tp: '3 個月', date: today, t1: '完成 LINE 個人化分期衛教推播', t2: '鐵與鈣錯開遵從率 92%、維生素 D 劑量校正', t3: '孕期 Hb 回升至 11.8 g/dL、血壓穩定', score: 88 }
+          ]);
+        }
+      } else if (currentStage === 'pediatric') {
+        document.getElementById('c-age').value = '11';
+        document.getElementById('c-sex').value = 'M';
+        document.getElementById('c-height').value = '146';
+        document.getElementById('c-weight').value = '54';
+        document.getElementById('c-sugar').value = '5';
+        document.getElementById('c-veg').value = '2';
+        document.getElementById('c-overweight').checked = true;
+        const cbs = document.querySelectorAll('.who-school-cb');
+        cbs[0].checked = true; cbs[1].checked = true; cbs[2].checked = false; cbs[3].checked = true;
+        calcPediatric();
+        if (getLogs('pediatric').length === 0) {
+          saveLogs('pediatric', [
+            { id: 1, tp: '基線 (Baseline)', date: '2026-09-01', t1: '轉介 AAP 家庭參與 IHBLT、啟動校園 Co-design', t2: '含糖飲料 5 次/週、午餐剩食 35%', t3: '年齡性別 BMI 百分位 >95%', score: 45 },
+            { id: 2, tp: '3 個月', date: today, t1: '完成 14 小時家庭生活型態介入、校園食品達標', t2: '含糖飲料降至 1 次/週、剩食降至 15%', t3: 'BMI 成長軌跡趨緩、每日蔬果增至 4 份', score: 78 }
+          ]);
+        }
+      } else if (currentStage === 'adult') {
+        document.getElementById('a-age').value = '58';
+        document.getElementById('a-sex').value = 'M';
+        document.getElementById('a-height').value = '171';
+        document.getElementById('a-weight').value = '82';
+        document.getElementById('a-waist').value = '96';
+        document.getElementById('a-sbp').value = '138';
+        document.getElementById('a-dbp').value = '88';
+        document.getElementById('a-hba1c').value = '6.2';
+        document.getElementById('a-fg').value = '114';
+        document.getElementById('a-grip').value = '26.5';
+        document.getElementById('a-chair').value = '13.2';
+        document.getElementById('a-cv-risk').checked = true;
+        document.getElementById('a-osteo').checked = false;
+        calcAdult();
+        if (getLogs('adult').length === 0) {
+          saveLogs('adult', [
+            { id: 1, tp: '基線 (Baseline)', date: '2026-08-01', t1: '職場健檢異常辨識與營養師初次 MNT', t2: '外食高油糖、無規律阻力運動', t3: '體重 82 kg、腰圍 96 cm、握力 26.5 kg', score: 48 },
+            { id: 2, tp: '3 個月', date: today, t1: '完成 2 次營養諮詢與職場健康餐計畫', t2: '地中海飲食實踐、每週阻力訓練 2 次', t3: '減重 4.6 kg (5.6%)、腰圍 92 cm、握力 29.0 kg', score: 85 }
+          ]);
+        }
+      } else if (currentStage === 'elderly') {
+        document.getElementById('e-age').value = '82';
+        document.getElementById('e-height').value = '160';
+        document.getElementById('e-weight').value = '52';
+        document.getElementById('e-renal').value = 'ckd_nd';
+        document.getElementById('e-albumin').value = '3.1';
+        document.getElementById('e-frail').checked = true;
+        document.getElementById('mna-1').value = '1';
+        document.getElementById('mna-2').value = '2';
+        document.getElementById('mna-3').value = '1';
+        document.getElementById('mna-4').value = '0';
+        document.getElementById('mna-5').value = '2';
+        document.getElementById('mna-6').value = '1';
+        document.querySelectorAll('.glim-p')[0].checked = true;
+        document.querySelectorAll('.glim-p')[2].checked = true;
+        document.querySelectorAll('.glim-e')[0].checked = true;
+        document.querySelectorAll('.icope-cap')[0].checked = true;
+        document.querySelectorAll('.icope-cap')[2].checked = true;
+        calcElderly(false);
+        updateIcopeCaps();
+        if (getLogs('elderly').length === 0) {
+          saveLogs('elderly', [
+            { id: 1, tp: '基線 (Baseline)', date: '2026-10-01', t1: '社區 MNA-SF 篩檢異常並轉介腎臟/營養門診', t2: '飲食攝取不足，啟動個別化蛋白與 ONS', t3: 'MNA-SF 7 分、GLIM 確診營養不良、體重 52 kg', score: 42 },
+            { id: 2, tp: '1 個月', date: today, t1: '完成 ICOPE 個人化計畫與每月追蹤', t2: 'ONS 遵從率 85%、總熱量達 1,560 kcal/日', t3: 'MNA-SF 升至 10 分、體重回升 1.3 kg、腎功能穩定', score: 80 }
+          ]);
+        }
+      }
+
+      renderLogs();
+      showToast(`已帶入「${STAGE_CONFIG[currentStage].name}」臨床範例`, 'success');
+    }
+
+    function resetCurrentStage() {
+      const panel = document.getElementById(`panel-${currentStage}`);
+      panel.querySelectorAll('input[type="number"], input[type="text"]').forEach(el => {
+        el.value = '';
+        el.classList.remove('invalid');
+      });
+      panel.querySelectorAll('input[type="checkbox"]').forEach(el => el.checked = false);
+      panel.querySelectorAll('.err-msg').forEach(el => el.classList.remove('show'));
+
+      if (currentStage === 'maternal') {
+        document.getElementById('p-stage').value = 't1';
+        document.getElementById('i-months').value = '5';
+        document.getElementById('i-feed').value = 'bf';
+        calcPregnant();
+        calcInfant();
+      } else if (currentStage === 'pediatric') {
+        calcPediatric();
+      } else if (currentStage === 'adult') {
+        calcAdult();
+      } else if (currentStage === 'elderly') {
+        document.getElementById('e-renal').value = 'healthy';
+        document.getElementById('mna-1').value = '2';
+        document.getElementById('mna-2').value = '3';
+        document.getElementById('mna-3').value = '2';
+        document.getElementById('mna-4').value = '2';
+        document.getElementById('mna-5').value = '2';
+        document.getElementById('mna-6').value = '3';
+        calcElderly(false);
+        updateIcopeCaps();
+      }
+      showToast(`已清除重置「${STAGE_CONFIG[currentStage].name}」`);
+    }
+
+    /* ========================================================================
+       10. INITIALIZATION
+       ======================================================================== */
+    document.addEventListener('DOMContentLoaded', () => {
+      document.getElementById('log-date').value = new Date().toISOString().split('T')[0];
+      renderGuidelines('all');
+      calcPregnant();
+      calcInfant();
+      calcPediatric();
+      calcAdult();
+      calcElderly(false);
+      selectIcopeStep(1);
+      syncDashboardStage();
+    });
+  </script>
+</body>
+</html>
